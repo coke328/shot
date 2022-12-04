@@ -49,9 +49,10 @@ void player::drawParts()
 }
 int t = 6;
 bool rightlegturn = true;
+/*
 Vector2 lastfootpos = { 400,356};
 Vector2 predictstep = { 0,0 };
-
+*/
 void player::partsMovement()
 {
 	double tmp = rotation + (PI / 2);
@@ -78,7 +79,9 @@ void player::partsMovement()
 	if (state == 1) {
 		
 		if (t > 0) {
-			float h = (9 + t * (t - tm) / (tm/2)) * scale;
+			float a = 0.05;
+			float h = (9 + a * t * (t - tm))*scale;
+			
 			cout << h << endl;
 			if (rightlegturn) {
 				rightleg.Height = h*32/9;
@@ -101,6 +104,10 @@ void player::partsMovement()
 		//legmove();
 	}
 	else {
+		rightleg.Height = 32 * scale;
+		rightleg.Origin.y = 23 * scale;
+		leftleg.Height = 32 * scale;
+		leftleg.Origin.y = 23 * scale;
 	}
 }
 
