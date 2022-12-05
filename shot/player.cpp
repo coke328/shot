@@ -23,6 +23,8 @@ void player::playerInit()
 	
 	rightfootstep = { 400 - 2*scale,300 + 14 * scale};
 	leftfootstep = { 400 + 2*scale,300 + 14 * scale};
+	lastfootposL = { 400,300 + 10 * scale };
+	lastfootposR = { 400,300 + 10 * scale };
 
 	head.init(Vector2{ Pos.x,Pos.y - 12 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { 16 * scale,6 * scale }, "resource/playerhead.png");
 	body.init(Vector2{ Pos.x,Pos.y }, 32 * scale, 32 * scale, 0, 1, 0, { (float)16.5 * scale ,18 * scale }, "resource/body.png");
@@ -48,9 +50,9 @@ void player::drawParts()
 	
 }
 int t = 15;
+int i = 1;
+bool sorted = false;
 bool rightlegturn = true;
-Vector2 lastfootposR = { 400,340};
-Vector2 lastfootposL = { 400,340 };
 Vector2 predictstep = { 0,0 };
 Vector2 tmpL = { 0,0 };
 Vector2 tmpR = { 0,0 };
@@ -76,20 +78,20 @@ void player::partsMovement()
 	rightleg.setPos(Pos.x + localrlpos.x, Pos.y + localrlpos.y);
 	leftleg.setPos(Pos.x + localllpos.x, Pos.y + localllpos.y);
 
-	int tm = 10;
+	int tm = 8;
 	
 	if (state == 1) {
-		
+		sorted = false;
+
 		if (t > 0) {
 			
 			if (t == tm) {
 				tmpL = localllpos;
 				tmpR = localrlpos;
 			}
-			predictstep.x = Pos.x + (Vel.x * (t+5));
-			predictstep.y = Pos.y + (Vel.y * (t+5));
-
-			DrawCircle(predictstep.x, predictstep.y, 10, BLACK);
+			predictstep.x = Pos.x + (Vel.x * (t+4));
+			predictstep.y = Pos.y + (Vel.y * (t+4));
+			
 			if (rightlegturn) {
 				
 				rightfootstep.x = (predictstep.x - lastfootposR.x) * (tm + 1 - t) / tm + lastfootposR.x + tmpR.x;
@@ -118,6 +120,21 @@ void player::partsMovement()
 		legmove();
 	}
 	else {
+		if (!sorted) {
+			lastfootposR = rightfootstep;
+			lastfootposL = leftfootstep;
+			i = 1;
+			sorted = true;
+		}
+		int im = 10;
+		if (i <= im) {
+			rightfootstep.x = (Pos.x + localrlpos.x - lastfootposR.x) * i / im + lastfootposR.x;
+			rightfootstep.y = (Pos.y + 5 * scale + localrlpos.y - lastfootposR.y) * i / im + lastfootposR.y;
+			leftfootstep.x = (Pos.x + localllpos.x - lastfootposL.x) * i / im + lastfootposL.x;
+			leftfootstep.y = (Pos.y + 5 * scale + localllpos.y - lastfootposL.y) * i / im + lastfootposL.y;
+			legmove();
+			i++;
+		}
 	}
 }
 
@@ -190,9 +207,13 @@ void player::unloadTextures()
 
 void player::legmove()
 {
+	int maxleglength = 30;
 	float x = rightfootstep.x - (Pos.x + localrlpos.x);
 	float y = rightfootstep.y - (Pos.y + localrlpos.y);
 	float distance = sqrtf(x*x + y*y);
+	if (distance > maxleglength) {
+		distance = maxleglength;
+	}
 	rightleg.Height = distance / 9 * 32;
 
 	rightleg.Origin.y = distance / 9 * 23;
@@ -203,6 +224,9 @@ void player::legmove()
 	x = leftfootstep.x - (Pos.x + localllpos.x);
 	y = leftfootstep.y - (Pos.y + localllpos.y);
 	distance = sqrtf(x * x + y * y);
+	if (distance > maxleglength) {
+		distance = maxleglength;
+	}
 	leftleg.Height = distance / 9 * 32;
 
 	leftleg.Origin.y = distance / 9 * 23;

@@ -8,6 +8,7 @@ public:
 	Vector2 Pos;
 	Vector2 Vel;
 	Vector2 Acc;
+
 	int state = 0;//0:stop 1:walk
 	float Xspeed;
 	float Yspeed;
@@ -15,11 +16,14 @@ public:
 	float Ymaxspeed;
 	float rotation;
 	float scale;
+
 	Vector2 localheadpos;
 	Vector2 localllpos;
 	Vector2 localrlpos;
 	Vector2 leftfootstep;
 	Vector2 rightfootstep;
+	Vector2 lastfootposR;
+	Vector2 lastfootposL;
 	
 	sprite head;
 	sprite body;
