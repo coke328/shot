@@ -47,10 +47,13 @@ void player::drawParts()
 	body.drawTexture();
 	
 }
-int t = 6;
+int t = 15;
 bool rightlegturn = true;
-Vector2 lastfootpos = { 400,356};
+Vector2 lastfootposR = { 400,340};
+Vector2 lastfootposL = { 400,340 };
 Vector2 predictstep = { 0,0 };
+Vector2 tmpL = { 0,0 };
+Vector2 tmpR = { 0,0 };
 
 void player::partsMovement()
 {
@@ -73,22 +76,36 @@ void player::partsMovement()
 	rightleg.setPos(Pos.x + localrlpos.x, Pos.y + localrlpos.y);
 	leftleg.setPos(Pos.x + localllpos.x, Pos.y + localllpos.y);
 
-	int tm = 15;
+	int tm = 10;
 	
 	if (state == 1) {
 		
 		if (t > 0) {
-			float h = (9 + t * (t - tm) / (tm/2)) * scale;
-			cout << h << endl;
+			
+			if (t == tm) {
+				tmpL = localllpos;
+				tmpR = localrlpos;
+			}
+			predictstep.x = Pos.x + (Vel.x * (t+5));
+			predictstep.y = Pos.y + (Vel.y * (t+5));
+
+			DrawCircle(predictstep.x, predictstep.y, 10, BLACK);
 			if (rightlegturn) {
-				rightleg.Height = h*32/9;
-				rightleg.Origin.y = 23 * h / 9;
 				
+				rightfootstep.x = (predictstep.x - lastfootposR.x) * (tm + 1 - t) / tm + lastfootposR.x + tmpR.x;
+				rightfootstep.y = ((predictstep.y + 5 * scale) - lastfootposR.y) * (tm + 1 - t) / tm + lastfootposR.y + tmpR.y;
+				
+				if (t == 1) {
+					lastfootposR = rightfootstep;
+				}
 			}
 			else {
-				leftleg.Height = h*32/9;
-				leftleg.Origin.y = 23 * h / 9;
-				cout << leftleg.Origin.y << endl;
+
+				leftfootstep.x = (predictstep.x - lastfootposL.x) * (tm+1-t) / tm + lastfootposL.x + tmpL.x;
+				leftfootstep.y = (predictstep.y + 5 * scale - lastfootposL.y) * (tm + 1 - t) / tm  + lastfootposL.y + tmpL.y;
+				if (t == 1) {
+					lastfootposL = leftfootstep;
+				}
 			}
 			t--;
 		}
@@ -98,7 +115,7 @@ void player::partsMovement()
 		}
 		
 		
-		//legmove();
+		legmove();
 	}
 	else {
 	}
