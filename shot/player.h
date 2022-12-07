@@ -8,6 +8,8 @@ public:
 	Vector2 Pos;
 	Vector2 Vel;
 	Vector2 Acc;
+	Vector2 globalPos;
+	Vector2 camPos;
 
 	int state = 0;//0:stop 1:walk
 	float Xspeed;
@@ -16,6 +18,8 @@ public:
 	float Ymaxspeed;
 	float rotation;
 	float scale;
+	int camWidth;
+	int camHeight;
 
 	Vector2 localheadpos;
 	Vector2 localllpos;
@@ -36,5 +40,6 @@ public:
 	void movement();
 	void unloadTextures();
 	void legmove();
+	void cammove();
 };
 
