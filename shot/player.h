@@ -34,7 +34,7 @@ public:
 	sprite leftleg;
 	sprite rightleg;
 	player();
-	void playerInit();
+	void playerInit(int x, int y);
 	void drawParts();
 	void partsMovement();
 	void movement();

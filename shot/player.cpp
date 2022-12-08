@@ -9,9 +9,9 @@ player::player()
 {
 }
 
-void player::playerInit()
+void player::playerInit(int x, int y)
 {
-	Pos = { 400,300 };
+	Pos = { (float)x,(float)y };
 	Vel = { 0,0 };
 	Acc = { 0,0 };
 	Xspeed = 0.5;
@@ -21,7 +21,7 @@ void player::playerInit()
 	scale = 4;
 	localheadpos = { 0,-12 * scale };
 	camPos = { 0,0 };
-	globalPos = { 400,300 };
+	globalPos = { (float)x,(float)y };
 	camWidth = 800;
 	camHeight = 600;
 
@@ -94,8 +94,8 @@ void player::partsMovement()
 				tmpL = localllpos;
 				tmpR = localrlpos;
 			}
-			predictstep.x = Pos.x + (Vel.x * (t+4));
-			predictstep.y = Pos.y + (Vel.y * (t+4));
+			predictstep.x = globalPos.x + (Vel.x * (t+4));
+			predictstep.y = globalPos.y + (Vel.y * (t+4));
 			
 			if (rightlegturn) {
 				
@@ -133,10 +133,10 @@ void player::partsMovement()
 		}
 		int im = 10;
 		if (i <= im) {
-			rightfootstep.x = (Pos.x + localrlpos.x - lastfootposR.x) * i / im + lastfootposR.x;
-			rightfootstep.y = (Pos.y + 5 * scale + localrlpos.y - lastfootposR.y) * i / im + lastfootposR.y;
-			leftfootstep.x = (Pos.x + localllpos.x - lastfootposL.x) * i / im + lastfootposL.x;
-			leftfootstep.y = (Pos.y + 5 * scale + localllpos.y - lastfootposL.y) * i / im + lastfootposL.y;
+			rightfootstep.x = (globalPos.x + localrlpos.x - lastfootposR.x) * i / im + lastfootposR.x;
+			rightfootstep.y = (globalPos.y + 5 * scale + localrlpos.y - lastfootposR.y) * i / im + lastfootposR.y;
+			leftfootstep.x = (globalPos.x + localllpos.x - lastfootposL.x) * i / im + lastfootposL.x;
+			leftfootstep.y = (globalPos.y + 5 * scale + localllpos.y - lastfootposL.y) * i / im + lastfootposL.y;
 			legmove();
 			i++;
 		}
@@ -216,8 +216,8 @@ void player::unloadTextures()
 void player::legmove()
 {
 	int maxleglength = 30;
-	float x = rightfootstep.x - (Pos.x + localrlpos.x);
-	float y = rightfootstep.y - (Pos.y + localrlpos.y);
+	float x = rightfootstep.x - (globalPos.x + localrlpos.x);
+	float y = rightfootstep.y - (globalPos.y + localrlpos.y);
 	float distance = sqrtf(x*x + y*y);
 	if (distance > maxleglength) {
 		distance = maxleglength;
@@ -229,8 +229,8 @@ void player::legmove()
 	float rot = 180 / PI * atan2f(y, x) + 270;
 	rightleg.Rotation = rot;
 
-	x = leftfootstep.x - (Pos.x + localllpos.x);
-	y = leftfootstep.y - (Pos.y + localllpos.y);
+	x = leftfootstep.x - (globalPos.x + localllpos.x);
+	y = leftfootstep.y - (globalPos.y + localllpos.y);
 	distance = sqrtf(x * x + y * y);
 	if (distance > maxleglength) {
 		distance = maxleglength;
@@ -245,6 +245,7 @@ void player::legmove()
 
 void player::cammove()
 {
-
+	camPos.x = globalPos.x - camWidth / 2;
+	camPos.y = globalPos.y - camHeight / 2;
 }
 
