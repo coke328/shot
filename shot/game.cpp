@@ -5,15 +5,9 @@
 
 player p;
 int FPS = 60;
-Vector2 camPos;
-int camWidth;
-int camHeight;
 
 void init() {
 	p.playerInit(400,300);
-	camPos = p.camPos;
-	camWidth = p.camWidth;
-	camHeight = p.camHeight;
 }
 
 void draw() {
@@ -29,10 +23,9 @@ void update()
 {
 	clock_t t = clock();
 	if ((t - lastTime) >= 1000 / FPS) {
-		camPos = p.camPos;
 		p.movement();
 		p.partsMovement();
-		p.cammove();
+		cam::setcamPos(p.globalPos);
 		lastTime = t;
 	}
 }

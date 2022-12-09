@@ -20,11 +20,7 @@ void player::playerInit(int x, int y)
 	Ymaxspeed = 4;
 	scale = 4;
 	localheadpos = { 0,-12 * scale };
-	camPos = { 0,0 };
 	globalPos = { (float)x,(float)y };
-	camWidth = 800;
-	camHeight = 600;
-
 	
 	rightfootstep = { 400 - 2*scale,300 + 14 * scale};
 	leftfootstep = { 400 + 2*scale,300 + 14 * scale};
@@ -147,8 +143,7 @@ void player::movement()
 {
 	
 	rotation = atan2f(GetMousePosition().y - Pos.y, GetMousePosition().x - Pos.x);
-	Pos.x = globalPos.x - camPos.x;
-	Pos.y = globalPos.y - camPos.y;
+	Pos = cam::getscreenPos(globalPos);
 	//cout << rotation * 180 / 3.141592 << endl;
 	bool W = IsKeyDown(KEY_W);
 	bool S = IsKeyDown(KEY_S);
@@ -243,9 +238,6 @@ void player::legmove()
 	leftleg.Rotation = rot;
 }
 
-void player::cammove()
-{
-	camPos.x = globalPos.x - camWidth / 2;
-	camPos.y = globalPos.y - camHeight / 2;
-}
+	//cam::camPos.x = globalPos.x - cam::camWidth / 2;
+	//cam::camPos.y = globalPos.y - cam::camHeight / 2;
 
