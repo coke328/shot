@@ -130,9 +130,9 @@ void player::partsMovement()
 		int im = 10;
 		if (i <= im) {
 			rightfootstep.x = (globalPos.x + localrlpos.x - lastfootposR.x) * i / im + lastfootposR.x;
-			rightfootstep.y = (globalPos.y + 5 * scale + localrlpos.y - lastfootposR.y) * i / im + lastfootposR.y;
+			rightfootstep.y = (globalPos.y + 8 * scale + localrlpos.y - lastfootposR.y) * i / im + lastfootposR.y;
 			leftfootstep.x = (globalPos.x + localllpos.x - lastfootposL.x) * i / im + lastfootposL.x;
-			leftfootstep.y = (globalPos.y + 5 * scale + localllpos.y - lastfootposL.y) * i / im + lastfootposL.y;
+			leftfootstep.y = (globalPos.y + 8 * scale + localllpos.y - lastfootposL.y) * i / im + lastfootposL.y;
 			legmove();
 			i++;
 		}

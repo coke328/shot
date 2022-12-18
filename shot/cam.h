@@ -9,4 +9,3 @@ public:
 	static Vector2 getscreenPos(Vector2 globalPos);
 	static void setcamPos(Vector2 Pos);
 };
-

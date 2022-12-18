@@ -1,16 +1,17 @@
 #include "game.h"
-#include "player.h"
-#include <time.h>
-
 
 player p;
+tilemap tmap;
 int FPS = 60;
 
 void init() {
-	p.playerInit(400,300);
+	p.playerInit(0, 0);
+	tmap.loadmap("resource/tilemap/test.txt");
+	
 }
 
 void draw() {
+	tmap.drawtilemap();
 	p.drawParts();
 }
 
