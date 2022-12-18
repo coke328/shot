@@ -2,7 +2,7 @@
 
 tilemap::tilemap()
 {
-	scale = 2;
+	scale = 4;
 	width = 0; 
 	height = 0;
 	tilecount = 0;
@@ -34,7 +34,7 @@ void tilemap::loadmap(string file)
 			int t;
 			sscanf_s(s.c_str(), "%d", &t);
 
-			Vector2 tmp = { 64 * scale * (i + j), 32 * scale * (i - j - 1) };
+			Vector2 tmp = { 32 * scale * (i + j), 16 * scale * (i - j - 1) };
 			Tile[j][i].init(t, tmp, 0);
 		}
 	}
