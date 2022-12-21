@@ -5,8 +5,8 @@ Texture2D texture;
 void tile::drawtile(float scale)
 {
 	Rectangle tmp = { 0,0,0,0 };
-	if (tiletype > 0) {
-		tmp = { (float)64 * (tiletype - 1),0,(float)64 * tiletype,32 };
+	if (height == 0) {
+		tmp = { (float)64 * tiletype,0,64,32 };
 	}
 	Rectangle dest = { localPos.x,localPos.y,64 * scale,32 * scale };
 	DrawTexturePro(texture, tmp, dest, { 0,0 }, 0, WHITE);
@@ -24,12 +24,19 @@ void tile::init(int type, Vector2 globalpos, int h)
 	height = h;
 	tiletype = type;
 	localPos = { globalPos.x - cam::camPos.x,globalPos.y - cam::camPos.y };
+	if (height > 0) {
+
+	}
 }
 
 void tile::textureLoad()
 {
 	
 	texture = LoadTexture("resource/tile.png");
+}
+
+void tile::unloadtexture() {
+	UnloadTexture(texture);
 }
 
 tile::tile()

@@ -4,6 +4,12 @@
 #include <string>
 #include "sprite.h"
 #include "tile.h"
+#include "sprite.h"
+#include "spriteCtrl.h"
+#include "pillar.h"
+#include <vector>
+
+using namespace std;
 
 class tilemap {
 public:
@@ -12,21 +18,14 @@ public:
 	int width;
 	int height;
 	float scale;
+
+	std::vector<sprite> walls;
+	std::vector<pillar> pillars;
 	
 	tilemap();
-	void loadmap(string file);
+	void loadmap(std::string file);
+	static void unloadT();
 	void drawtilemap();
+	void loadwall();
+	void loadlongwall(Vector2 wallPos, bool state);
 };
-
-/*
-namespace tilemap {
-	tile** Tile;
-	int tilecount;
-	int width;
-	int height;
-	float scale;
-
-	void loadmap(string file);
-	void drawtilemap();
-}
-*/

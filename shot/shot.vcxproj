@@ -136,16 +136,20 @@
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pillar.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="spriteCtrl.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="tilemap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cam.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="pillar.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="spriteCtrl.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="tilemap.h" />
   </ItemGroup>

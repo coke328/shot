@@ -10,8 +10,8 @@ public:
 	Vector2 localPos;
 	int height;
 	int tiletype;
-	//static Texture2D texture;
 	static void textureLoad();
+	static void unloadtexture();
 	tile();
 	tile(int type, Vector2 globalpos,int h);
 	void drawtile(float scale);
