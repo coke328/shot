@@ -7,7 +7,7 @@ class pillar
 public:
 	int height;
 	sprite* parts;
-	pillar(Vector2 pos, int h, float scale);
+	pillar(Vector2 pos, int h, float scale, int tiletype);
 	void partsToSprites();
 };
 

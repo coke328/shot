@@ -30,7 +30,7 @@ void update()
 		
 		cam::setcamPos(spc.p.globalPos);
 		spc.spritesUpdate();
-		spc.p.movement();
+		spc.p.update();
 		spc.p.partsMovement();
 
 		lastTime = t;

@@ -35,7 +35,7 @@ public:
 	void playerInit(int x, int y);
 	void drawParts();
 	void partsMovement();
-	void movement();
+	void update();
 	void unloadTextures();
 	void legmove();
 };

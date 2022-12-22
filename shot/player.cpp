@@ -139,7 +139,7 @@ void player::partsMovement()
 	}
 }
 
-void player::movement()
+void player::update()
 {
 	
 	rotation = atan2f(GetMousePosition().y - Pos.y, GetMousePosition().x - Pos.x);
@@ -195,6 +195,11 @@ void player::movement()
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;
 	Pos = cam::getscreenPos(globalPos);
+
+	head.depth = globalPos.y + 16 * scale;
+	body.depth = globalPos.y + 16 * scale;
+	rightleg.depth = globalPos.y + localrlpos.y + 9 * scale;
+	leftleg.depth = globalPos.y + localllpos.y + 9 * scale;
 }
 
 void player::unloadTextures()
