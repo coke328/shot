@@ -1,5 +1,6 @@
 #include "spriteCtrl.h"
 std::vector<sprite*>spriteCtrl::sprites;
+int spriteCtrl::activecnt;
 
 void insertion_sort(int* seq,int n) {
 	int i, j, key;
@@ -13,7 +14,7 @@ void insertion_sort(int* seq,int n) {
 }
 
 void spriteCtrl::load() {
-	p.playerInit(0, 0);
+	p.playerInit(200, 0);
 	sprites.push_back(&p.head);
 	sprites.push_back(&p.body);
 	sprites.push_back(&p.leftleg);
@@ -28,9 +29,6 @@ void spriteCtrl::load() {
 	activecnt = n;
 	insertion_sort(sequence, n);
 	
-	for (int a = 0; a < n; a++) {
-		std::cout << sequence[a] <<"," << sprites[sequence[a]]->depth << std::endl;
-	}
 }
 
 void spriteCtrl::spritesDraw()

@@ -1,19 +1,22 @@
 #include "game.h"
 
-player p;
 tilemap tmap;
 spriteCtrl spc;
 int FPS = 60;
 
 void init() {
 	tmap.loadmap("resource/tilemap/test.txt");
-	tmap.loadwall();
+	tmap.load();
 	spc.load();
 }
 
 void draw() {
 	tmap.drawtilemap();
 	spc.spritesDraw();
+	DrawCircle(spc.p.Pos.x - 5 * 4, spc.p.Pos.y + 9.5 * 4, 5, BLACK);
+	DrawCircle(spc.p.Pos.x + 5 * 4, spc.p.Pos.y + 9.5 * 4, 5, BLACK);
+	DrawCircle(spc.p.Pos.x - 5 * 4, spc.p.Pos.y + 13.5 * 4, 5, BLACK);
+	DrawCircle(spc.p.Pos.x + 5 * 4, spc.p.Pos.y + 13.5 * 4, 5, BLACK);
 }
 
 void unload() {

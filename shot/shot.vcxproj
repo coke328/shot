@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="boundary.cpp" />
+    <ClCompile Include="boundarys.cpp" />
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boundary.h" />
+    <ClInclude Include="boundarys.h" />
     <ClInclude Include="cam.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="pillar.h" />

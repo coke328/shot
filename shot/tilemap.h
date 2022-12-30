@@ -26,6 +26,6 @@ public:
 	void loadmap(std::string file);
 	static void unloadT();
 	void drawtilemap();
-	void loadwall();
+	void load();
 	void loadlongwall(Vector2 wallPos, bool state);
 };

@@ -8,7 +8,7 @@ class spriteCtrl {
 public:
 	static std::vector<sprite*> sprites;
 	int* sequence;
-	int activecnt;
+	static int activecnt;
 	player p;
 
 	void load();

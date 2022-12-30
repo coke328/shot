@@ -32,6 +32,12 @@ void player::playerInit(int x, int y)
 	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0);
 	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0);
 
+	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
+	b.bounds.emplace_back(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
+	b.init(4);
+
 }
 
 void player::drawParts()
@@ -78,6 +84,11 @@ void player::partsMovement()
 	body.setPos(Pos.x - 0.4 * scale, Pos.y);
 	rightleg.setPos(Pos.x + localrlpos.x, Pos.y + localrlpos.y);
 	leftleg.setPos(Pos.x + localllpos.x, Pos.y + localllpos.y);
+
+	b.bounds[0].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
+	b.bounds[1].boundaryInit(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	b.bounds[2].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	b.bounds[3].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
 
 	int tm = 8;
 	
@@ -195,6 +206,8 @@ void player::update()
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;
 	Pos = cam::getscreenPos(globalPos);
+
+	b.collid(globalPos, Vel);
 
 	head.depth = globalPos.y + 16 * scale;
 	body.depth = globalPos.y + 16 * scale;

@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include "raylib.h"
 #include "cam.h"
+#include "boundarys.h"
 
 class player
 {
@@ -31,6 +32,9 @@ public:
 	sprite body;
 	sprite leftleg;
 	sprite rightleg;
+
+	boundarys b;
+
 	player();
 	void playerInit(int x, int y);
 	void drawParts();

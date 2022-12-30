@@ -10,6 +10,7 @@ tilemap::tilemap()
 
 void tilemap::loadmap(string file)
 {
+
 	tile::textureLoad();
 
 	ifstream myfile(file);
@@ -44,6 +45,8 @@ void tilemap::loadmap(string file)
 	}
 
 	myfile.close();
+
+	boundarys::staticboundarysInit(width, height, scale);
 }
 
 void tilemap::unloadT()
@@ -61,7 +64,7 @@ void tilemap::drawtilemap()
 	}
 }
 
-void tilemap::loadwall()
+void tilemap::load()
 {
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
