@@ -9,7 +9,7 @@ public:
 	static std::vector<sprite*> sprites;
 	int* sequence;
 	static int activecnt;
-	player p;
+	player* p;
 
 	void load();
 	void spritesDraw();

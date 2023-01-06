@@ -17,6 +17,7 @@ public:
 	float Yspeed;
 	float Xmaxspeed;
 	float Ymaxspeed;
+	float stopspeed;
 	float rotation;
 	float scale;
 
@@ -33,7 +34,7 @@ public:
 	sprite leftleg;
 	sprite rightleg;
 
-	boundarys b;
+	slipcollid c;
 
 	player();
 	void playerInit(int x, int y);

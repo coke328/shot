@@ -76,7 +76,8 @@ void tilemap::load()
 				loadlongwall(Tile[x][y].globalPos, 1);//rightwall
 			}
 			if (Tile[x][y].height != 0) {
-				pillar p(Tile[x][y].globalPos, Tile[x][y].height, 4, Tile[x][y].tiletype);
+				tile tmp = Tile[x][y];
+				pillar p(tmp.globalPos, tmp.height, 4, tmp.tiletype);
 				pillars.push_back(p);
 			}
 		

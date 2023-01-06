@@ -3,6 +3,7 @@
 #include "player.h"
 #include "tilemap.h"
 #include <time.h>
+#include <thread>
 #include "spriteCtrl.h"
 
 void init();

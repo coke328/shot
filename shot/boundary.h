@@ -6,7 +6,7 @@
 struct vecbool
 {
 	Vector2 point;
-	bool iscollid;
+	bool iscollid[2];
 };
 
 class boundary
@@ -15,8 +15,8 @@ public:
 	float a, b, c;//ax+by+c=0
 	Vector2 Points[2];
 	bool isStatic;
-	bool p;
 	float* bsaves;
+	bool* ps;
 	boundary();
 	boundary(float x1, float y1, float x2, float y2, bool st);
 	void boundaryInit(float x1, float y1, float x2, float y2, bool st);

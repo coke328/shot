@@ -15,21 +15,15 @@ vecbool boundary::isCollid(boundary bound, int j)
 
     if ((((b1value1 > 0) && (b1value2 < 0)) || ((b1value1 < 0) && (b1value2 > 0))) && (((b2value1 > 0) && (b2value2 < 0)) || ((b2value1 < 0) && (b2value2 > 0)))) {
         tmp.iscollid = true;
-        std::cout << bsaves[i] << "," << bsaves[i + 1] << std::endl;
+
         if (((b2value1 > 0) && (bsaves[i] < 0)) || ((b2value1 < 0) && (bsaves[i] > 0))) { 
-            //tmp.point = Points[0]; 
-            p = 0;
-            std::cout << 0 << std::endl; 
+            ps[j] = 0;
         }
-        if (((b2value2 > 0) && (bsaves[i + 1] < 0)) || ((b2value2 < 0) && (bsaves[i + 1] > 0))) { 
-            //tmp.point = Points[1]; 
-            p = 1;
-            std::cout << 1 << std::endl; 
+        else if (((b2value2 > 0) && (bsaves[i + 1] < 0)) || ((b2value2 < 0) && (bsaves[i + 1] > 0))) { 
+            ps[j] = 1;
         }
-        //std::cout << tmp.point.x << "," << tmp.point.y << std::endl;
-        
     }
-    tmp.point = Points[p];
+    tmp.point = Points[ps[j]];
     bsaves[i] = b2value1;
     bsaves[i+1] = b2value2;
     return tmp;

@@ -14,14 +14,16 @@ void player::playerInit(int x, int y)
 	Pos = { (float)x,(float)y };
 	Vel = { 0,0 };
 	Acc = { 0,0 };
-	Xspeed = 0.5;
-	Yspeed = 0.5;
-	Xmaxspeed = 5;
-	Ymaxspeed = 4;
+	Xspeed = 0.4;//0.5
+	Yspeed = 0.3;
+	Xmaxspeed = 4;//5
+	Ymaxspeed = 3;//4
+	stopspeed = 1;
 	scale = 4;
 	localheadpos = { 0,-12 * scale };
 	globalPos = { (float)x,(float)y };
 	
+	//parts pos set
 	rightfootstep = { 400 - 2*scale,300 + 14 * scale};
 	leftfootstep = { 400 + 2*scale,300 + 14 * scale};
 	lastfootposL = { 400,300 + 10 * scale };
@@ -32,11 +34,16 @@ void player::playerInit(int x, int y)
 	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0);
 	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0);
 
-	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
-	b.bounds.emplace_back(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	b.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
-	b.init(4);
+	//boundary set
+	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
+	c.bounds.emplace_back(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
+	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
+	c.blocalPos.emplace_back(-5 * scale, 9.5 * scale);
+	c.blocalPos.emplace_back(5 * scale, 9.5 * scale);
+	c.blocalPos.emplace_back(5 * scale, 13.5 * scale);
+	c.blocalPos.emplace_back(-5 * scale, 13.5 * scale);
+	c.init(4);
 
 }
 
@@ -84,11 +91,6 @@ void player::partsMovement()
 	body.setPos(Pos.x - 0.4 * scale, Pos.y);
 	rightleg.setPos(Pos.x + localrlpos.x, Pos.y + localrlpos.y);
 	leftleg.setPos(Pos.x + localllpos.x, Pos.y + localllpos.y);
-
-	b.bounds[0].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
-	b.bounds[1].boundaryInit(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	b.bounds[2].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	b.bounds[3].boundaryInit(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
 
 	int tm = 8;
 	
@@ -184,30 +186,40 @@ void player::update()
 		Vel.y = -Ymaxspeed;
 	}
 	if (!A && !D) {
-		if (Vel.x < 0) {
+		if (Vel.x < -stopspeed) {
 			Vel.x += Xspeed;
 		}
-		else if (Vel.x > 0) {
+		else if (Vel.x > stopspeed) {
 			Vel.x -= Xspeed;
+		}
+		else
+		{
+			Vel.x = 0;
 		}
 	}
 	if(!W && !S){
-		if (Vel.y < 0) {
+		if (Vel.y < -stopspeed) {
 			Vel.y += Yspeed;
 		}
-		else if (Vel.y > 0) {
+		else if (Vel.y > stopspeed) {
 			Vel.y -= Yspeed;
+		}
+		else {
+			Vel.y = 0;
 		}
 	}
 	if (!W && !S && !A && !D) {
 		state = 0;
 	}
 	else { state = 1; }
+
+	c.collid(globalPos, Vel);
+
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;
 	Pos = cam::getscreenPos(globalPos);
 
-	b.collid(globalPos, Vel);
+	
 
 	head.depth = globalPos.y + 16 * scale;
 	body.depth = globalPos.y + 16 * scale;

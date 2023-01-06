@@ -1,8 +1,8 @@
 #include "game.h"
+#define FPS 120
 
 tilemap tmap;
 spriteCtrl spc;
-int FPS = 60;
 
 void init() {
 	tmap.loadmap("resource/tilemap/test.txt");
@@ -13,10 +13,10 @@ void init() {
 void draw() {
 	tmap.drawtilemap();
 	spc.spritesDraw();
-	DrawCircle(spc.p.Pos.x - 5 * 4, spc.p.Pos.y + 9.5 * 4, 5, BLACK);
-	DrawCircle(spc.p.Pos.x + 5 * 4, spc.p.Pos.y + 9.5 * 4, 5, BLACK);
-	DrawCircle(spc.p.Pos.x - 5 * 4, spc.p.Pos.y + 13.5 * 4, 5, BLACK);
-	DrawCircle(spc.p.Pos.x + 5 * 4, spc.p.Pos.y + 13.5 * 4, 5, BLACK);
+	DrawCircle(spc.p->Pos.x - 5 * 4, spc.p->Pos.y + 9.5 * 4, 5, BLACK);
+	DrawCircle(spc.p->Pos.x + 5 * 4, spc.p->Pos.y + 9.5 * 4, 5, BLACK);
+	DrawCircle(spc.p->Pos.x - 5 * 4, spc.p->Pos.y + 13.5 * 4, 5, BLACK);
+	DrawCircle(spc.p->Pos.x + 5 * 4, spc.p->Pos.y + 13.5 * 4, 5, BLACK);
 }
 
 void unload() {
@@ -24,6 +24,7 @@ void unload() {
 	spc.spritesUnload();
 }
 
+std::thread t1;
 clock_t lastTime;
 void update()
 {
@@ -31,11 +32,11 @@ void update()
 	clock_t t = clock();
 	if ((t - lastTime) >= 1000 / FPS) {
 		
-		cam::setcamPos(spc.p.globalPos);
+		cam::setcamPos(spc.p->globalPos);
 		spc.spritesUpdate();
-		spc.p.update();
-		spc.p.partsMovement();
-
+		t1 = thread(&player::partsMovement,&spc.p[0]);
+		spc.p->update();
+		t1.join();
 		lastTime = t;
 	}
 }

@@ -14,11 +14,12 @@ void insertion_sort(int* seq,int n) {
 }
 
 void spriteCtrl::load() {
-	p.playerInit(200, 0);
-	sprites.push_back(&p.head);
-	sprites.push_back(&p.body);
-	sprites.push_back(&p.leftleg);
-	sprites.push_back(&p.rightleg);
+	p = new player();
+	p->playerInit(200, 0);
+	sprites.push_back(&p->head);
+	sprites.push_back(&p->body);
+	sprites.push_back(&p->leftleg);
+	sprites.push_back(&p->rightleg);
 
 	int n = sprites.size();
 	sequence = new int[n];
