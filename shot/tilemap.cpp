@@ -45,13 +45,18 @@ void tilemap::loadmap(string file)
 	}
 
 	myfile.close();
-
-	boundarys::staticboundarysInit(width, height, scale);
 }
 
 void tilemap::unloadT()
 {
 	tile::unloadtexture();
+	for (int i = 0; i < pillars.size(); i++) {
+		delete[] pillars[i].parts;
+	}
+	for (int i = 0; i < width; i++) {
+		delete[] Tile[i];
+	}
+	delete[] Tile;
 }
 
 void tilemap::drawtilemap()
@@ -75,14 +80,22 @@ void tilemap::load()
 			if (x == width - 1) {
 				loadlongwall(Tile[x][y].globalPos, 1);//rightwall
 			}
-			if (Tile[x][y].height != 0) {
-				tile tmp = Tile[x][y];
-				pillar p(tmp.globalPos, tmp.height, 4, tmp.tiletype);
+			tile T = Tile[x][y];
+			if (T.height != 0) {
+				pillar p(T.globalPos, T.height, 4, T.tiletype);
 				pillars.push_back(p);
 			}
-		
+			if (T.tiletype == 0) {
+				boundarys::staticbounds.emplace_back(T.globalPos.x, T.globalPos.y + 16 * scale, T.globalPos.x + 32 * scale, T.globalPos.y, true);
+				boundarys::staticbounds.emplace_back(T.globalPos.x + 32 * scale, T.globalPos.y, T.globalPos.x + 64 * scale, T.globalPos.y + 16 * scale, true);
+				boundarys::staticbounds.emplace_back(T.globalPos.x + 64 * scale, T.globalPos.y + 16 * scale, T.globalPos.x + 32 * scale, T.globalPos.y + 32 * scale, true);
+				boundarys::staticbounds.emplace_back(T.globalPos.x + 32 * scale, T.globalPos.y + 32 * scale, T.globalPos.x, T.globalPos.y + 16 * scale, true);
+			}
 		}
 	}
+	int tmp[2] = { 4,4*pillars.size() };
+	//boundarys::stbounddiv.push_back(tmp);//pillar division
+
 	for (int i = 0; i < walls.size(); i++) {//wallsprite to sprites vectors
 		spriteCtrl::sprites.push_back(&walls[i]);
 	}

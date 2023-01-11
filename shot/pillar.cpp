@@ -18,6 +18,7 @@ pillar::pillar(Vector2 pos, int h, float scale, int tiletype) {
 	boundarys::staticbounds.emplace_back(pos.x + 32 * scale, pos.y, pos.x + 64 * scale, pos.y + 16 * scale, true);
 	boundarys::staticbounds.emplace_back(pos.x + 64 * scale, pos.y + 16 * scale, pos.x + 32 * scale, pos.y + 32 * scale, true);
 	boundarys::staticbounds.emplace_back(pos.x + 32 * scale, pos.y + 32 * scale, pos.x, pos.y + 16 * scale, true);
+	boundarys::holeidxstart += 4;
 }
 
 void pillar::partsToSprites()

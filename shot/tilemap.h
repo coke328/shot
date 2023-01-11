@@ -1,11 +1,8 @@
 #pragma once
 #include <fstream>
-#include <iostream>
 #include <string>
 #include "sprite.h"
 #include "tile.h"
-#include "sprite.h"
-#include "spriteCtrl.h"
 #include "pillar.h"
 #include <vector>
 
@@ -24,7 +21,7 @@ public:
 	
 	tilemap();
 	void loadmap(std::string file);
-	static void unloadT();
+	void unloadT();
 	void drawtilemap();
 	void load();
 	void loadlongwall(Vector2 wallPos, bool state);

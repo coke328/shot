@@ -1,25 +1,29 @@
 #include "boundarys.h"
 
 std::vector<boundary> boundarys::staticbounds;
+int boundarys::dyboundcnt;
+int boundarys::holeidxstart;
 
 boundarys::boundarys()
 {
 	boundcnt = 0;
 }
 
-void boundarys::init(int cnt) {
-	boundcnt = cnt;
+boundarys::~boundarys()
+{
 	for (int i = 0; i < bounds.size(); i++) {
-		int size = staticbounds.size();
+		bounds[i].removeMemory();
+	}
+}
+
+void boundarys::init(int cnt, int idx) {
+	boundcnt = cnt;
+	id = idx;
+	int size = boundarys::staticbounds.size();
+	for (int i = 0; i < bounds.size(); i++) {
 		boundary& b = bounds[i];
-		b.bsaves = new float[size*2];
-		b.ps = new bool[size];
-		for (int j = 0; j < size*2; j++) {
-			b.bsaves[j] = 0;
-		}
-		for (int j = 0; j < size; j++) {
-			b.ps[j] = 0;
-		}
+		b.bsaves = new float[size*2]();
+		b.ps = new bool[size]();
 	}
 }
 
@@ -32,42 +36,25 @@ void boundarys::setboundaryPos(Vector2 globalPos)
 }
 
 
-void boundarys::staticboundarysInit(int w, int h, float scale)
+void boundarys::staticboundarysInit()
 {
-	staticbounds.emplace_back(0, 0, w * 32 * scale, h * -16 * scale, true);
-	staticbounds.emplace_back(w * 32 * scale, h * -16 * scale, w * 64 * scale, 0, true);
-	staticbounds.emplace_back(0, 0, w * 32 * scale, h * 16 * scale, true);
-	staticbounds.emplace_back(w * 32 * scale, h * 16 * scale, w * 64 * scale, 0, true);
-
-}
-/*
-void boundarys::collid(Vector2 &globalPos, Vector2 &vel)
-{
-
-	setboundaryPos(globalPos);
-
-	for (int i = 0; i < bounds.size(); i++) {
-		for (int j = 0; j < staticbounds.size(); j++) {
-			boundary stb = staticbounds[j];
-			vecbool tmp = bounds[i].isCollid(stb,j);
-			if (tmp.iscollid && tmp.point.x != 0 && tmp.point.y != 0) {
-				
-				Vector2 p = tmp.point;
-
-				globalPos.x = (stb.b * (stb.b * p.x - stb.a * p.y) - stb.a * stb.c) / (stb.a * stb.a + stb.b * stb.b)-p.x + globalPos.x;
-				globalPos.y = (stb.a * (stb.a * p.y - stb.b * p.x) - stb.b * stb.c) / (stb.a * stb.a + stb.b * stb.b)-p.y + globalPos.y;
-
-				setboundaryPos(globalPos);
-				
-				float t = (stb.a * vel.x + stb.b * vel.y) / (stb.a * stb.a + stb.b * stb.b);
-				vel.x -= t * stb.a;
-				vel.y -= t * stb.b;
-				
-			}
-		}
+	
+	for (int i = 0; i < boundarys::staticbounds.size(); i++) {
+		boundary& b = boundarys::staticbounds[i];
+		b.bsaves = new float[dyboundcnt * 2]();
+		b.ps = new bool[dyboundcnt*2]();
 	}
 }
-*/
+
+void boundarys::suburbbound(int w, int h, float scale)
+{
+	boundarys::staticbounds.emplace_back(0, 0, w * 32 * scale, h * -16 * scale, true);
+	boundarys::staticbounds.emplace_back(w * 32 * scale, h * -16 * scale, w * 64 * scale, 0, true);//여긴 왜 문제????
+	boundarys::staticbounds.emplace_back(0, 0, w * 32 * scale, h * 16 * scale, true);
+	boundarys::staticbounds.emplace_back(w * 32 * scale, h * 16 * scale, w * 64 * scale, 0, true);
+	boundarys::holeidxstart += 4;
+}
+
 vec2::vec2(float inx, float iny)
 {
 	x = inx;
@@ -79,23 +66,41 @@ void slipcollid::collid(Vector2& globalPos, Vector2& vel)
 	setboundaryPos(globalPos);
 
 	for (int i = 0; i < bounds.size(); i++) {
-		for (int j = 0; j < staticbounds.size(); j++) {
-			boundary stb = staticbounds[j];
-			vecbool tmp = bounds[i].isCollid(stb, j);
-			if (tmp.iscollid && tmp.point.x != 0 && tmp.point.y != 0) {
-
+		for (int j = 0; j < boundarys::staticbounds.size(); j++) {
+			Vecbool tmp = bounds[i].isCollid(boundarys::staticbounds[j], j, i);
+			
+			if (tmp.iscollid && !(tmp.point.x == 0 && tmp.point.y == 0)) {
 				Vector2 p = tmp.point;
+				boundary b;
+				//std::cout << tmp.collsitu << " : " << p.x << " , " << p.y << std::endl;
+				//Vector2 tmppos = { globalPos.x - vel.x,globalPos.y - vel.y };
+				bool t = false;
+				if (tmp.collsitu) {
+					b = boundarys::staticbounds[j];
+					globalPos.x += (b.b * (b.b * p.x - b.a * p.y) - b.a * b.c) / (b.a * b.a + b.b * b.b) - p.x;
+					globalPos.y += (b.a * (b.a * p.y - b.b * p.x) - b.b * b.c) / (b.a * b.a + b.b * b.b) - p.y;
+					t = true;
+				}
+				else if(!tmp.isPing) {
+					
+					b = bounds[i];
+					//std::cout << "jact" << std::endl;
+					globalPos.x -= (b.b * (b.b * p.x - b.a * p.y) - b.a * b.c) / (b.a * b.a + b.b * b.b) - p.x;
+					globalPos.y -= (b.a * (b.a * p.y - b.b * p.x) - b.b * b.c) / (b.a * b.a + b.b * b.b) - p.y;
+					t = true;
+				}
+				if(t){
+					setboundaryPos(globalPos);
 
-				globalPos.x = (stb.b * (stb.b * p.x - stb.a * p.y) - stb.a * stb.c) / (stb.a * stb.a + stb.b * stb.b) - p.x + globalPos.x;
-				globalPos.y = (stb.a * (stb.a * p.y - stb.b * p.x) - stb.b * stb.c) / (stb.a * stb.a + stb.b * stb.b) - p.y + globalPos.y;
-
-				setboundaryPos(globalPos);
-
-				float t = (stb.a * vel.x + stb.b * vel.y) / (stb.a * stb.a + stb.b * stb.b);
-				vel.x -= t * stb.a;
-				vel.y -= t * stb.b;
-
+					float t = (b.a * vel.y - b.b * vel.x) / (b.a * b.a + b.b * b.b);
+					vel.x = -t * b.b;
+					vel.y = t * b.a;
+					//vel = { globalPos.x - tmppos.x,globalPos.y - tmppos.y };
+					//std::cout << vel.x << " , " << vel.y << std::endl;
+				}
 			}
+			
 		}
+		
 	}
 }

@@ -1,7 +1,5 @@
 #pragma once
 #include "sprite.h"
-#include "raylib.h"
-#include "cam.h"
 #include "boundarys.h"
 
 class player

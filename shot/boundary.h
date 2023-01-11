@@ -3,10 +3,12 @@
 #include <vector>
 #include <iostream>
 
-struct vecbool
+struct Vecbool
 {
 	Vector2 point;
-	bool iscollid[2];
+	bool collsitu;
+	bool iscollid;
+	bool isPing;
 };
 
 class boundary
@@ -20,7 +22,8 @@ public:
 	boundary();
 	boundary(float x1, float y1, float x2, float y2, bool st);
 	void boundaryInit(float x1, float y1, float x2, float y2, bool st);
-	vecbool isCollid(boundary bound, int j);
+	void removeMemory();
+	Vecbool isCollid(boundary& bound, int j, int k);
 };
 
 

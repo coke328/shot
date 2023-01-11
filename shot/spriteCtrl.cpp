@@ -45,6 +45,7 @@ void spriteCtrl::spritesUnload()
 	for (int i = 0; i < sprites.size(); i++) {
 		sprites[i]->unloadTexture();
 	}
+	delete p;
 }
 
 void spriteCtrl::spritesUpdate()

@@ -1,8 +1,5 @@
 #pragma once
-#include <vector>
-#include "sprite.h"
 #include "player.h"
-#include <iostream>
 
 class spriteCtrl {
 public:

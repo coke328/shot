@@ -43,8 +43,10 @@ void player::playerInit(int x, int y)
 	c.blocalPos.emplace_back(5 * scale, 9.5 * scale);
 	c.blocalPos.emplace_back(5 * scale, 13.5 * scale);
 	c.blocalPos.emplace_back(-5 * scale, 13.5 * scale);
-	c.init(4);
+	c.init(4,0);//(boundcnt,id)
 
+	boundarys::dyboundcnt += 4;
+	
 }
 
 void player::drawParts()
@@ -157,6 +159,8 @@ void player::update()
 	
 	rotation = atan2f(GetMousePosition().y - Pos.y, GetMousePosition().x - Pos.x);
 	
+	
+
 	bool W = IsKeyDown(KEY_W);
 	bool S = IsKeyDown(KEY_S);
 	bool A = IsKeyDown(KEY_A);
