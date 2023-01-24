@@ -97,7 +97,7 @@ void tilemap::load()
 	//boundarys::stbounddiv.push_back(tmp);//pillar division
 
 	for (int i = 0; i < walls.size(); i++) {//wallsprite to sprites vectors
-		spriteCtrl::sprites.push_back(&walls[i]);
+		sprite::sprites.push_back(&walls[i]);
 	}
 	for (int i = 0; i < pillars.size(); i++) {
 		pillars[i].partsToSprites();
@@ -108,10 +108,10 @@ void tilemap::loadlongwall(Vector2 wallPos, bool state)
 {
 	sprite tmp;
 	if (state) {
-		tmp.init({ wallPos.x + 32 * scale,wallPos.y - 240 * scale}, 32 * scale, 256 * scale, 0, 1, 1, { 0,0 }, "resource/longwall.png", wallPos.y);
+		tmp.init({ wallPos.x + 32 * scale,wallPos.y - 240 * scale}, 32 * scale, 256 * scale, 0, 1, 1, { 0,0 }, "resource/longwall.png", wallPos.y,true);
 	}
 	else {
-		tmp.init({ wallPos.x,wallPos.y - 240 * scale }, 32 * scale, 256 * scale, 0, 1, 0, { 0,0 }, "resource/longwall.png", wallPos.y);
+		tmp.init({ wallPos.x,wallPos.y - 240 * scale }, 32 * scale, 256 * scale, 0, 1, 0, { 0,0 }, "resource/longwall.png", wallPos.y,true);
 	}
 	walls.push_back(tmp);
 }

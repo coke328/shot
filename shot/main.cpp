@@ -1,15 +1,17 @@
 #include "raylib.h"
 #include "game.h"
+#define WIDTH 1600
+#define HEIGHT 900
 
 
 int main() {
-	InitWindow(800, 600, "shot");
+	InitWindow(WIDTH, HEIGHT, "shot");
 	SetTargetFPS(144);
 	init();
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
-		ClearBackground(BLACK);
+		ClearBackground({40,40,40,255});
 		update();
 		draw();
 		EndDrawing();

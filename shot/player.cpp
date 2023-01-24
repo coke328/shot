@@ -29,10 +29,10 @@ void player::playerInit(int x, int y)
 	lastfootposL = { 400,300 + 10 * scale };
 	lastfootposR = { 400,300 + 10 * scale };
 
-	head.init({ Pos.x,Pos.y - 12 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { 16 * scale,6 * scale }, "resource/playerhead.png",0);
-	body.init({ Pos.x,Pos.y }, 32 * scale, 32 * scale, 0, 1, 0, { (float)16.5 * scale ,18 * scale }, "resource/body.png",0);
-	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0);
-	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0);
+	head.init({ Pos.x,Pos.y - 12 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { 16 * scale,6 * scale }, "resource/playerhead.png",0,true);
+	body.init({ Pos.x,Pos.y }, 32 * scale, 32 * scale, 0, 1, 0, { (float)16.5 * scale ,18 * scale }, "resource/body.png",0,true);
+	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0,true);
+	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0,true);
 
 	//boundary set
 	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
@@ -158,9 +158,7 @@ void player::update()
 {
 	
 	rotation = atan2f(GetMousePosition().y - Pos.y, GetMousePosition().x - Pos.x);
-	
-	
-
+	Thread = std::thread(&inventory::update,&inven,globalPos,rotation);
 	bool W = IsKeyDown(KEY_W);
 	bool S = IsKeyDown(KEY_S);
 	bool A = IsKeyDown(KEY_A);
@@ -219,16 +217,19 @@ void player::update()
 
 	c.collid(globalPos, Vel);
 
+	
+
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;
 	Pos = cam::getscreenPos(globalPos);
-
-	
 
 	head.depth = globalPos.y + 16 * scale;
 	body.depth = globalPos.y + 16 * scale;
 	rightleg.depth = globalPos.y + localrlpos.y + 9 * scale;
 	leftleg.depth = globalPos.y + localllpos.y + 9 * scale;
+
+	Thread.join();
+	//inven.update(globalPos,rotation);
 }
 
 void player::unloadTextures()

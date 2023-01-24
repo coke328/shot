@@ -1,6 +1,8 @@
 #pragma once
 #include "sprite.h"
 #include "boundarys.h"
+#include "inventory.h"
+#include <thread>
 
 class player
 {
@@ -18,6 +20,7 @@ public:
 	float stopspeed;
 	float rotation;
 	float scale;
+	float hp;
 
 	Vector2 localheadpos;
 	Vector2 localllpos;
@@ -33,6 +36,8 @@ public:
 	sprite rightleg;
 
 	slipcollid c;
+	inventory inven;
+	std::thread Thread;
 
 	player();
 	void playerInit(int x, int y);

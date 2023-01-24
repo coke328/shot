@@ -18,6 +18,8 @@ public:
 	std::vector<boundary> bounds;
 	std::vector<vec2> blocalPos;
 
+	Vector2 globalPos;
+
 	int id;
 	int boundcnt;
 	boundarys();
@@ -25,17 +27,19 @@ public:
 	void init(int cnt, int idx);
 	static void staticboundarysInit();
 	static void suburbbound(int w, int h, float scale);
-	virtual void collid(Vector2& globalPos, Vector2& vel) = 0;
-	void setboundaryPos(Vector2 globalPos);
+	virtual bool collid(Vector2& globalPos, Vector2& vel) = 0;
+	void setboundaryPos(Vector2 gPos);
+	void boundset();
 
 };
 
 class slipcollid : public boundarys {
 public:
-	virtual void collid(Vector2& globalPos, Vector2& vel);
+	bool collid(Vector2& globalPos, Vector2& vel) override;
 };
 
-class bulletcollid : public boundarys {
+class bulletBound {
 public:
-	virtual void collid();
+	boundary b[2];
+	Vecbool collid();
 };

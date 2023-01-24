@@ -1,6 +1,7 @@
 #pragma once
 #include "sprite.h"
 #include "spriteCtrl.h"
+#include "boundarys.h"
 
 class pillar
 {

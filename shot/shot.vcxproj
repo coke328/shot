@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="boundary.cpp" />
     <ClCompile Include="boundarys.cpp" />
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inventory.cpp" />
@@ -145,11 +146,13 @@
     <ClCompile Include="spriteCtrl.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="tilemap.cpp" />
+    <ClCompile Include="ui.cpp" />
     <ClCompile Include="weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boundary.h" />
     <ClInclude Include="boundarys.h" />
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="cam.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inventory.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="spriteCtrl.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="tilemap.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

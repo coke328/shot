@@ -1,12 +1,11 @@
 #include "spriteCtrl.h"
-std::vector<sprite*>spriteCtrl::sprites;
-int spriteCtrl::activecnt;
+//std::vector<sprite*>spriteCtrl::sprites;
 
 void insertion_sort(int* seq,int n) {
 	int i, j, key;
 	for (i = 1; i < n; i++) {
 		key = seq[i];
-		for (j = i - 1; j >= 0 && spriteCtrl::sprites[seq[j]]->depth > spriteCtrl::sprites[key]->depth; j--) {
+		for (j = i - 1; j >= 0 && sprite::sprites[seq[j]]->depth > sprite::sprites[key]->depth; j--) {
 			seq[j + 1] = seq[j];
 		}
 		seq[j + 1] = key;
@@ -16,41 +15,56 @@ void insertion_sort(int* seq,int n) {
 void spriteCtrl::load() {
 	p = new player();
 	p->playerInit(200, 0);
-	sprites.push_back(&p->head);
-	sprites.push_back(&p->body);
-	sprites.push_back(&p->leftleg);
-	sprites.push_back(&p->rightleg);
+	sprite::sprites.push_back(&p->head);
+	sprite::sprites.push_back(&p->body);
+	sprite::sprites.push_back(&p->leftleg);
+	sprite::sprites.push_back(&p->rightleg);
 
-	int n = sprites.size();
+	int n = sprite::sprites.size();
 	sequence = new int[n];
 	for (int i = 0; i < n; i++) {
 		sequence[i] = i;
 	}
 	
-	activecnt = n;
+	sprite::cnt = n;
 	insertion_sort(sequence, n);
 	
 }
 
 void spriteCtrl::spritesDraw()
 {
-	insertion_sort(sequence, activecnt);
-	for (int i = 0; i < activecnt; i++) {
-		sprites[sequence[i]]->drawTexture();
+	if (sprite::cnt != sprite::sprites.size()) {
+		delete[] sequence;
+		sprite::cnt = sprite::sprites.size();
+		sequence = new int[sprite::cnt];
+		for (int i = 0; i < sprite::cnt; i++) {
+			sequence[i] = i;
+		}
+		for (int i = 0; i < sprite::sprites.size(); i++) {
+			sprite::sprites[i]->setspId(i);
+		}
+		//std::cout << "spriteC:" << sprite::cnt << std::endl;
+	}
+	//std::cout << (sprite::cnt == sprite::sprites.size()) << std::endl;
+	insertion_sort(sequence, sprite::cnt);
+	for (int i = 0; i < sprite::cnt; i++) {
+		sprite::sprites[sequence[i]]->drawTexture();
 	}
 }
 
 void spriteCtrl::spritesUnload()
 {
-	for (int i = 0; i < sprites.size(); i++) {
-		sprites[i]->unloadTexture();
+	for (int i = 0; i < sprite::sprites.size(); i++) {
+		sprite::sprites[i]->unloadTexture();
 	}
 	delete p;
+	delete[] sequence;
 }
 
 void spriteCtrl::spritesUpdate()
 {
-	for (int i = 0; i < sprites.size(); i++) {
-		sprites[i]->update();
+	
+	for (int i = 0; i < sprite::sprites.size(); i++) {
+		sprite::sprites[i]->update();
 	}
 }

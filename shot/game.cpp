@@ -11,7 +11,7 @@ void initlast() {
 void init() {
 	tmap->loadmap("resource/tilemap/test.txt");
 	tmap->load();
-	boundarys::suburbbound(5, 5, 4);
+	boundarys::suburbbound(6, 6, 4);
 	spc->load();
 	initlast();
 }

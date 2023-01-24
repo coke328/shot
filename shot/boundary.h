@@ -8,7 +8,6 @@ struct Vecbool
 	Vector2 point;
 	bool collsitu;
 	bool iscollid;
-	bool isPing;
 };
 
 class boundary
@@ -23,10 +22,11 @@ public:
 	boundary(float x1, float y1, float x2, float y2, bool st);
 	void boundaryInit(float x1, float y1, float x2, float y2, bool st);
 	void removeMemory();
+	void movePos(Vector2 mPos);
 	Vecbool isCollid(boundary& bound, int j, int k);
 };
 
 
 
 //boundbool isCollid(boundary bound1, boundary bound2);
-Vector2 boundmeet(boundary bound1, boundary bound2);
+Vecbool isboundmeet(boundary bound1, boundary bound2);
