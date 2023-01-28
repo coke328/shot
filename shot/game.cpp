@@ -11,7 +11,6 @@ void initlast() {
 void init() {
 	tmap->loadmap("resource/tilemap/test.txt");
 	tmap->load();
-	boundarys::suburbbound(6, 6, 4);
 	spc->load();
 	initlast();
 }
@@ -28,6 +27,7 @@ void draw() {
 void unload() {
 	tmap->unloadT();
 	spc->spritesUnload();
+	delete tmap, spc;
 }
 
 std::thread t1;

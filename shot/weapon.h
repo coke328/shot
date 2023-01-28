@@ -24,10 +24,11 @@ public:
 	bool isGunFlip;
 
 	sprite sp;
-
+	
 	virtual void fire() = 0;
 	virtual void update(Vector2 playerPos, float rot) = 0;
 	virtual void changeToAnotherWeapon() = 0;
+	virtual void changeThisWeapon() = 0;
 };
 
 class weaponManager {
@@ -39,6 +40,7 @@ public:
 
 	void fire();
 	void changeToAnotherWeapon();
+	void changeThisWeapon();
 	void update(Vector2 playerPos, float rot);
 	void changeWeapon(weapon* pw);
 
@@ -52,6 +54,7 @@ public:
 	void fire() override;
 	void update(Vector2 playerPos, float rot) override;
 	void changeToAnotherWeapon() override;
+	void changeThisWeapon() override;
 };
 
 class defaultHandGun : public weapon {
@@ -65,12 +68,38 @@ public:
 	bool reloading;
 	const int maxBulletPool = 50;
 	float bspeed;
+	bool singleShot;
 
 	bullet* bs;
+	Sound gunSound;
 
 	defaultHandGun();
 	~defaultHandGun();
 	void fire() override;
 	void update(Vector2 playerPos, float rot) override;
 	void changeToAnotherWeapon() override;
+	void changeThisWeapon() override;
+};
+
+class defaultAr : public weapon {
+public:
+	clock_t lastTimeFire;
+	clock_t lastTimeReload;
+	bool canFire;
+	int numberOfBullet;
+	int maxBullet;
+	float reloadTime;
+	bool reloading;
+	const int maxBulletPool = 50;
+	float bspeed;
+
+	bullet* bs;
+	Sound gunSound;
+
+	defaultAr();
+	~defaultAr();
+	void fire() override;
+	void update(Vector2 playerPos, float rot) override;
+	void changeToAnotherWeapon() override;
+	void changeThisWeapon() override;
 };

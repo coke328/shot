@@ -3,6 +3,7 @@
 weapon* returnWeapon(int idx) 
 {
 	if (idx == defaultHandgun) { return new defaultHandGun(); }
+	if (idx == defaultar) { return new defaultAr(); }
 }
 
 inventory::inventory()
@@ -10,6 +11,7 @@ inventory::inventory()
 	hand = 1;
 	Weapon.push_back(new Hand());
 	getitem(defaultHandgun);
+	getitem(defaultar);
 }
 
 int inventory::getItemIdx(int slot)

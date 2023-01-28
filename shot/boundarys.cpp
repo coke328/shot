@@ -62,7 +62,6 @@ void boundarys::suburbbound(int w, int h, float scale)
 	boundarys::staticbounds.emplace_back(w * 32 * scale, h * -16 * scale, w * 64 * scale, 0, true);
 	boundarys::staticbounds.emplace_back(0, 0, w * 32 * scale, h * 16 * scale, true);
 	boundarys::staticbounds.emplace_back(w * 32 * scale, h * 16 * scale, w * 64 * scale, 0, true);
-	boundarys::holeidxstart += 4;
 }
 
 vec2::vec2(float inx, float iny)
@@ -129,7 +128,7 @@ Vecbool bulletBound::collid()
 	result.point = { 0,0 };
 
 	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < boundarys::staticbounds.size(); j++) {
+		for (int j = 0; j < boundarys::holeidxstart; j++) {
 			Vecbool tmp = isboundmeet(b[i], boundarys::staticbounds[j]);
 			if (tmp.iscollid) {
 				result.iscollid = true;

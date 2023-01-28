@@ -71,6 +71,7 @@ void tilemap::drawtilemap()
 
 void tilemap::load()
 {
+	boundarys::suburbbound(6, 6, 4);
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			if (y == 0) {
@@ -85,7 +86,14 @@ void tilemap::load()
 				pillar p(T.globalPos, T.height, 4, T.tiletype);
 				pillars.push_back(p);
 			}
+		}
+	}
+	boundarys::holeidxstart = boundarys::staticbounds.size();
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			tile T = Tile[x][y];
 			if (T.tiletype == 0) {
+
 				boundarys::staticbounds.emplace_back(T.globalPos.x, T.globalPos.y + 16 * scale, T.globalPos.x + 32 * scale, T.globalPos.y, true);
 				boundarys::staticbounds.emplace_back(T.globalPos.x + 32 * scale, T.globalPos.y, T.globalPos.x + 64 * scale, T.globalPos.y + 16 * scale, true);
 				boundarys::staticbounds.emplace_back(T.globalPos.x + 64 * scale, T.globalPos.y + 16 * scale, T.globalPos.x + 32 * scale, T.globalPos.y + 32 * scale, true);
@@ -93,6 +101,7 @@ void tilemap::load()
 			}
 		}
 	}
+
 	int tmp[2] = { 4,4*pillars.size() };
 	//boundarys::stbounddiv.push_back(tmp);//pillar division
 

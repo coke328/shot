@@ -6,6 +6,7 @@
 
 int main() {
 	InitWindow(WIDTH, HEIGHT, "shot");
+	InitAudioDevice();
 	SetTargetFPS(144);
 	init();
 
@@ -17,8 +18,11 @@ int main() {
 		EndDrawing();
 	}
 
+	StopSoundMulti();
+
 	unload();
 
+	CloseAudioDevice();
 	CloseWindow();
 
 	return 0;

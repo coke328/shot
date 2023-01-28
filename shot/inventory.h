@@ -5,6 +5,7 @@
 
 enum {
 	defaultHandgun = 1,
+	defaultar,
 	liteSniper,
 	maxWeapons,
 };

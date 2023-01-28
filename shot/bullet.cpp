@@ -20,10 +20,10 @@ void bullet::fire()
 	Vector2 tmp2 = { cosf(rotation) * -bulletspeed,sinf(rotation) * -bulletspeed };
 	bb.b[0].boundaryInit(sp.globalPos.x + tmp.x, sp.globalPos.y + tmp.y, sp.globalPos.x + tmp.x + tmp2.x, sp.globalPos.y + tmp.y + tmp2.y, false);
 	bb.b[1].boundaryInit(sp.globalPos.x + -tmp.x, sp.globalPos.y + -tmp.y, sp.globalPos.x + -tmp.x + tmp2.x, sp.globalPos.y + -tmp.y + tmp2.y, false);
-
+	/*
 	if (!sp.isSprites) {
 		sp.spritesToVector();
-	}
+	}*/
 }
 
 void bullet::update()

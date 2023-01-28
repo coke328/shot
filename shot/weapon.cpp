@@ -29,6 +29,10 @@ void weaponManager::changeToAnotherWeapon()
 	w->changeToAnotherWeapon();
 }
 
+void weaponManager::changeThisWeapon() {
+	w->changeThisWeapon();
+}
+
 void weaponManager::update(Vector2 playerPos, float rot)
 {
 	if (holdGun) {
@@ -66,6 +70,7 @@ void weaponManager::changeWeapon(weapon* pw)
 		changeToAnotherWeapon();
 	}
 	w = pw;
+	changeThisWeapon();
 	w->sp.Visible = true;
 }
 
@@ -86,15 +91,17 @@ defaultHandGun::defaultHandGun()
 	sp.spritesToVector();
 	bs = new bullet[maxBulletPool];
 	bs[0].init({0,0}, 32 * 4, 32 * 4, 0, 0, 0, {16 * 4,16 * 4}, "resource/bullets/bullet.png", 0, bspeed, damage, 2*4);
-	for (int i = 0; i < maxBulletPool; i++) {
+	for (int i = 1; i < maxBulletPool; i++) {
 		bs[i].sp.setVisibla(false);
 		bs[i].sp.setspId(-1);
-		bs[i].sp.setIsSprites(false);
 	}
+
+	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
 }
 
 defaultHandGun::~defaultHandGun()
 {
+	UnloadSound(gunSound);
 	delete[] bs;
 }
 
@@ -106,7 +113,7 @@ void defaultHandGun::fire()
 			bool tmp = bs[i].sp.isSprites;
 			int id = bs[i].sp.Id;
 			bs[i] = bs[0];
-			bs[i].sp.setIsSprites(tmp);
+			//bs[i].sp.setIsSprites(tmp);
 			bs[i].sp.setspId(id);
 			bs[i].sp.setglobalPos(firePos);
 			bs[i].sp.setVisibla(true);
@@ -115,7 +122,6 @@ void defaultHandGun::fire()
 			executeOnce = false;
 		}
 	}
-	//for(int i = 1; i < maxBulletPool; i++) std::cout << "fire" << i << ":" << bs[i].sp.isSprites << std::endl;
 }
 
 void defaultHandGun::update(Vector2 playerPos, float rot)
@@ -125,16 +131,21 @@ void defaultHandGun::update(Vector2 playerPos, float rot)
 	if (lastTimeFire + firerate <= t && !canFire) {
 		canFire = true;
 	}
-	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !reloading && canFire) {
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !reloading && canFire && singleShot) {
 		canFire = false;
+		singleShot = false;
 		lastTimeFire = t;
 		if (numberOfBullet) {
 			std::cout << "fire" << std::endl;
 			sp.changeTexture(1);
 			invokeChangeTexture(&sp, 0, 100);
 			fire();
+			PlaySoundMulti(gunSound);
 			numberOfBullet--;
 		}
+	}
+	if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+		singleShot = true;
 	}
 	if (numberOfBullet != maxBullet && IsKeyDown(KEY_R) && !reloading) {
 		std::cout << "reloading" << std::endl;
@@ -157,11 +168,24 @@ void defaultHandGun::update(Vector2 playerPos, float rot)
 
 void defaultHandGun::changeToAnotherWeapon()
 {
+	//std::cout << "before:" << sprite::sprites.size() << std::endl;
 	for (int i = 1; i < maxBulletPool; i++) {
-		if (bs[i].sp.isSprites) {
-			std::cout << i << std::endl;
-			bs[i].destructor();
-		}
+		//std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
+		
+		//std::cout << i << std::endl;
+		bs[i].destructor();
+		
+	}
+	//std::cout << "after:" << sprite::sprites.size() << std::endl;
+}
+
+void defaultHandGun::changeThisWeapon() 
+{
+	for (int i = 1; i < maxBulletPool; i++) {
+		bs[i].sp.setVisibla(false);
+		bs[i].sp.setspId(-1);
+		bs[i].sp.setIsSprites(true);
+		bs[i].sp.spritesToVector();
 	}
 }
 
@@ -179,4 +203,122 @@ void Hand::update(Vector2 playerPos, float rot)
 
 void Hand::changeToAnotherWeapon()
 {
+}
+
+void Hand::changeThisWeapon() {
+
+}
+
+defaultAr::defaultAr()
+{
+	itemId = 1;
+	firerate = 50;//밀리세크
+	damage = 10;
+	bspeed = 20;
+	numberOfBullet = 30;
+	maxBullet = 30;
+	reloadTime = 2000;
+	reloading = false;
+	canFire = true;
+	distanceToGun = 60;
+	distanceToMuzzle = 96;
+	sp.init({ -100,-100 }, 32 * 4, 32 * 4, 0, 2, 0, { 16 * 4, 16 * 4 }, "resource/guns/defaultAr.png", 0, false);
+	sp.spritesToVector();
+	bs = new bullet[maxBulletPool];
+	bs[0].init({ 0,0 }, 32 * 3, 32 * 3, 0, 0, 0, { 16 * 3,16 * 3 }, "resource/bullets/bullet.png", 0, bspeed, damage, 2 * 4);
+	for (int i = 1; i < maxBulletPool; i++) {
+		bs[i].sp.setVisibla(false);
+		bs[i].sp.setspId(-1);
+	}
+
+	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
+}
+
+defaultAr::~defaultAr()
+{
+	UnloadSound(gunSound);
+	delete[] bs;
+}
+
+void defaultAr::fire()
+{
+	bool executeOnce = true;
+	for (int i = 1; i < maxBulletPool; i++) {
+		if (!bs[i].sp.Visible && executeOnce) {
+			bool tmp = bs[i].sp.isSprites;
+			int id = bs[i].sp.Id;
+			bs[i] = bs[0];
+			//bs[i].sp.setIsSprites(tmp);
+			bs[i].sp.setspId(id);
+			bs[i].sp.setglobalPos(firePos);
+			bs[i].sp.setVisibla(true);
+			bs[i].rotation = rotation;
+			bs[i].fire();
+			executeOnce = false;
+		}
+	}
+}
+
+void defaultAr::update(Vector2 playerPos, float rot)
+{
+
+	clock_t t = clock();
+	if (lastTimeFire + firerate <= t && !canFire) {
+		canFire = true;
+	}
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !reloading && canFire) {
+		canFire = false;
+		lastTimeFire = t;
+		if (numberOfBullet) {
+			std::cout << "fire" << std::endl;
+			sp.changeTexture(1);
+			invokeChangeTexture(&sp, 0, 20);
+			fire();
+			PlaySoundMulti(gunSound);
+			numberOfBullet--;
+		}
+	}
+	if (numberOfBullet != maxBullet && IsKeyDown(KEY_R) && !reloading) {
+		std::cout << "reloading" << std::endl;
+		sp.changeTexture(2);
+		invokeChangeTexture(&sp, 0, reloadTime);
+		lastTimeReload = t;
+		reloading = true;
+		/*
+		for (int i = 1; i < maxBulletPool; i++) {
+			std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
+		}*/
+	}
+	if (lastTimeReload + reloadTime <= t && reloading) {
+		std::cout << "reloading end" << std::endl;
+		numberOfBullet = maxBullet;
+		reloading = false;
+	}
+	for (int i = 1; i < maxBulletPool; i++) {
+		if (bs[i].sp.Visible) {
+			bs[i].update();
+		}
+	}
+}
+
+void defaultAr::changeToAnotherWeapon()
+{
+	//std::cout << "before:" << sprite::sprites.size() << std::endl;
+	for (int i = 1; i < maxBulletPool; i++) {
+		//std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
+
+		//std::cout << i << std::endl;
+		bs[i].destructor();
+	}
+	//std::cout << "after:" << sprite::sprites.size() << std::endl;
+}
+
+void defaultAr::changeThisWeapon() 
+{
+	for (int i = 1; i < maxBulletPool; i++) {
+		bs[i].sp.setVisibla(false);
+		bs[i].sp.setspId(-1);
+		bs[i].sp.setIsSprites(true);
+		bs[i].sp.spritesToVector();
+	}
 }
