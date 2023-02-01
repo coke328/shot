@@ -8,17 +8,24 @@ enum {
 	defaultar,
 	liteSniper,
 	maxWeapons,
+	healkit,
+
 };
 
 class inventory
 {
 private:
-	int items[24];//0~2 weapon 3~5 armor 6~ item
+	int items[10];//0~2 weapon 3~5 armor 6~ item
 	std::vector<weapon*> Weapon;
 	
 	bool activeInven;
 	int hand;
-	
+
+	ui reloadBar[2];
+	ui inventoryUi;
+
+	button tab;
+
 	weaponManager wm;
 public:
 	inventory();
@@ -26,6 +33,6 @@ public:
 	void getitem(int itemIdx);
 	void changeItem(int slot1, int slot2);
 	void drawInventory();
-	void update(Vector2 gPos, float rot);
+	void update(Vector2 gPos, float rot, float distanceMouse);
 };
 

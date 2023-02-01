@@ -3,6 +3,8 @@
 
 tilemap *tmap = new tilemap;
 spriteCtrl* spc = new spriteCtrl;
+uiCtrl* uc = new uiCtrl;
+ui aim;
 
 void initlast() {
 	boundarys::staticboundarysInit();
@@ -13,11 +15,16 @@ void init() {
 	tmap->load();
 	spc->load();
 	initlast();
+	HideCursor();
+	aim.init({ 0,0,8 * 4,8 * 4 }, 0, 0, { 4.5 * 4,4.5 * 4 }, "resource/Ui/mouseCursor.png", 3, true);
+	uiCtrl::push(&aim);
 }
 
 void draw() {
+	aim.setPos({ GetMousePosition().x - GetScreenWidth() / 2,GetMousePosition().y - GetScreenHeight() / 2 });
 	tmap->drawtilemap();
 	spc->spritesDraw();
+	uc->drawUi();
 	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + 9.5 * 4, 5, BLACK);
 	DrawCircle(spc->p->Pos.x + 5 * 4, spc->p->Pos.y + 9.5 * 4, 5, BLACK);
 	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + 13.5 * 4, 5, BLACK);
@@ -27,7 +34,8 @@ void draw() {
 void unload() {
 	tmap->unloadT();
 	spc->spritesUnload();
-	delete tmap, spc;
+	uc->unloadTexture();
+	delete tmap, spc, uc;
 }
 
 std::thread t1;

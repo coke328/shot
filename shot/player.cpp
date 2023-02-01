@@ -44,7 +44,6 @@ void player::playerInit(int x, int y)
 	c.blocalPos.emplace_back(5 * scale, 13.5 * scale);
 	c.blocalPos.emplace_back(-5 * scale, 13.5 * scale);
 	c.init(4,0);//(boundcnt,id)
-
 	boundarys::dyboundcnt += 4;
 	
 }
@@ -156,9 +155,10 @@ void player::partsMovement()
 
 void player::update()
 {
-	
-	rotation = atan2f(GetMousePosition().y - Pos.y, GetMousePosition().x - Pos.x);
-	Thread = std::thread(&inventory::update,&inven,globalPos,rotation);
+	Vector2 mPos = GetMousePosition();
+	rotation = atan2f(mPos.y - Pos.y, mPos.x - Pos.x);
+	float distanceToMouse = sqrtf(pow(mPos.x - Pos.x, 2) + pow(mPos.y - Pos.y, 2));
+	Thread = std::thread(&inventory::update,&inven,globalPos,rotation,distanceToMouse);
 	bool W = IsKeyDown(KEY_W);
 	bool S = IsKeyDown(KEY_S);
 	bool A = IsKeyDown(KEY_A);
@@ -217,7 +217,6 @@ void player::update()
 
 	c.collid(globalPos, Vel);
 
-	
 
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;

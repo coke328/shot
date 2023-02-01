@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include "raylib.h"
 #include "bullet.h"
+#include "ui.h"
 #include <time.h>
 #include <math.h>
 #include <iostream>
@@ -9,11 +10,22 @@
 
 #define PI 3.14
 
+class button {
+private:
+	bool singlePress;
+	bool lastPress;
+	int keyId;
+
+public:
+	void init(int id);
+	bool keyPressed();
+	bool mousePressed();
+};
+
 class weapon
 {
 public:
 	int itemId;
-
 	float firerate;
 	float damage;
 	float rotation;
@@ -22,11 +34,20 @@ public:
 	Vector2 firePos;
 	Vector2 gunPos;
 	bool isGunFlip;
+	float reloadTime;
+	bool reloading;
+	float Rt;
+	float accuracy;
+	float increaseAccuracy;
+	float increaseOverlap;
+	float decreaseOverlap;
+	float angle;
 
 	sprite sp;
-	
+
+	weapon();
 	virtual void fire() = 0;
-	virtual void update(Vector2 playerPos, float rot) = 0;
+	virtual void update(Vector2 playerPos, float rot, float distanceMouse) = 0;
 	virtual void changeToAnotherWeapon() = 0;
 	virtual void changeThisWeapon() = 0;
 };
@@ -34,14 +55,19 @@ public:
 class weaponManager {
 public:
 	bool holdGun;
+	ui aimPoint[2];
 
 	weaponManager() : w(0) {}
 	~weaponManager();
 
+	void init();
+	int getReloadingTime();
+	float getRt();
+	bool getisReloading();
 	void fire();
 	void changeToAnotherWeapon();
 	void changeThisWeapon();
-	void update(Vector2 playerPos, float rot);
+	void update(Vector2 playerPos, float rot, float distanceMouse);
 	void changeWeapon(weapon* pw);
 
 private:
@@ -52,7 +78,7 @@ class Hand : public weapon {
 public:
 	Hand();
 	void fire() override;
-	void update(Vector2 playerPos, float rot) override;
+	void update(Vector2 playerPos, float rot, float distanceMouse) override;
 	void changeToAnotherWeapon() override;
 	void changeThisWeapon() override;
 };
@@ -64,19 +90,19 @@ public:
 	bool canFire;
 	int numberOfBullet;
 	int maxBullet;
-	float reloadTime;
-	bool reloading;
 	const int maxBulletPool = 50;
 	float bspeed;
-	bool singleShot;
+	bool singleFire;
+	bool lastPressed;
 
 	bullet* bs;
 	Sound gunSound;
+	button leftClick;
 
 	defaultHandGun();
 	~defaultHandGun();
 	void fire() override;
-	void update(Vector2 playerPos, float rot) override;
+	void update(Vector2 playerPos, float rot, float distanceMouse) override;
 	void changeToAnotherWeapon() override;
 	void changeThisWeapon() override;
 };
@@ -88,10 +114,10 @@ public:
 	bool canFire;
 	int numberOfBullet;
 	int maxBullet;
-	float reloadTime;
-	bool reloading;
 	const int maxBulletPool = 50;
 	float bspeed;
+
+
 
 	bullet* bs;
 	Sound gunSound;
@@ -99,7 +125,7 @@ public:
 	defaultAr();
 	~defaultAr();
 	void fire() override;
-	void update(Vector2 playerPos, float rot) override;
+	void update(Vector2 playerPos, float rot, float distanceMouse) override;
 	void changeToAnotherWeapon() override;
 	void changeThisWeapon() override;
 };
