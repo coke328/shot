@@ -95,9 +95,11 @@ void sprite::setRotation(float radian)
 
 void sprite::spritesToVector()
 {
-	setspId(sprite::sprites.size());
-	sprite::sprites.push_back(this);
-	setIsSprites(true);
+	if (!isSprites) {
+		setspId(sprite::sprites.size());
+		sprite::sprites.push_back(this);
+		setIsSprites(true);
+	}
 }
 
 void sprite::spriteRemoveFromVector()
@@ -107,7 +109,7 @@ void sprite::spriteRemoveFromVector()
 		sprite::sprites.erase(sprite::sprites.begin() + Id);
 		setIsSprites(false);
 		for (int i = Id; i < sprite::sprites.size(); i++) {
-			sprite::sprites[i]->setspId(i);
+			sprite::sprites.at(i)->setspId(i);
 		}
 	}
 }

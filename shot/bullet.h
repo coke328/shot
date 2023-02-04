@@ -14,6 +14,8 @@ public:
 	float rotation;
 	int Radius;
 
+	bool friendly;
+
 	bulletBound bb;
 
 	sprite sp;

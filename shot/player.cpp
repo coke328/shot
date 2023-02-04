@@ -22,6 +22,7 @@ void player::playerInit(int x, int y)
 	scale = 4;
 	localheadpos = { 0,-12 * scale };
 	globalPos = { (float)x,(float)y };
+	hp = 100;
 	
 	//parts pos set
 	rightfootstep = { 400 - 2*scale,300 + 14 * scale};
@@ -33,6 +34,11 @@ void player::playerInit(int x, int y)
 	body.init({ Pos.x,Pos.y }, 32 * scale, 32 * scale, 0, 1, 0, { (float)16.5 * scale ,18 * scale }, "resource/body.png",0,true);
 	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0,true);
 	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0,true);
+	//head.spritesToVector();
+	//body.spritesToVector();
+	//leftleg.spritesToVector();
+	//rightleg.spritesToVector();
+
 
 	//boundary set
 	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
@@ -45,6 +51,16 @@ void player::playerInit(int x, int y)
 	c.blocalPos.emplace_back(-5 * scale, 13.5 * scale);
 	c.init(4,0);//(boundcnt,id)
 	boundarys::dyboundcnt += 4;
+	
+	bodyBound.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + -16 * scale, globalPos.x + 5 * scale, globalPos.y + -16 * scale, false);
+	bodyBound.bounds.emplace_back(globalPos.x + 5 * scale, globalPos.y + -16 * scale, globalPos.x + 5 * scale, globalPos.y + 12 * scale, false);
+	bodyBound.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 12 * scale, globalPos.x + 5 * scale, globalPos.y + 12 * scale, false);
+	bodyBound.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + -16 * scale, globalPos.x - 5 * scale, globalPos.y + 12 * scale, false);
+
+	bodyBound.blocalPos.emplace_back(-5 * scale, -16 * scale);
+	bodyBound.blocalPos.emplace_back(5 * scale, -16 * scale);
+	bodyBound.blocalPos.emplace_back(5 * scale, 12 * scale);
+	bodyBound.blocalPos.emplace_back(-5 * scale, 12 * scale);
 	
 }
 
@@ -64,13 +80,6 @@ void player::drawParts()
 	body.drawTexture();
 	
 }
-int t = 15;
-int i = 1;
-bool sorted = false;
-bool rightlegturn = true;
-Vector2 predictstep = { 0,0 };
-Vector2 tmpL = { 0,0 };
-Vector2 tmpR = { 0,0 };
 
 void player::partsMovement()
 {
@@ -215,8 +224,8 @@ void player::update()
 	}
 	else { state = 1; }
 
-	c.collid(globalPos, Vel);
-
+	c.update(globalPos, Vel);
+	bodyBound.update(globalPos, Vel);
 
 	globalPos.x += Vel.x;
 	globalPos.y += Vel.y;
@@ -228,7 +237,6 @@ void player::update()
 	leftleg.depth = globalPos.y + localllpos.y + 9 * scale;
 
 	Thread.join();
-	//inven.update(globalPos,rotation);
 }
 
 void player::unloadTextures()

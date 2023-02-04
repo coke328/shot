@@ -3,6 +3,7 @@
 void bullet::init(Vector2 gPos,int w, int h, float r, int maxId, int id, Vector2 origin, std::string file, float d, float bspeed, float damage, int radius)
 {
 	Damage = damage;
+	bb.setDamage(damage);
 	bulletspeed = bspeed;
 	sp.init(gPos,w,h,r,maxId,id,origin,file,d,true);
 	Radius = radius;
@@ -14,10 +15,6 @@ void bullet::fire()
 	Vector2 tmp2 = { cosf(rotation) * -bulletspeed,sinf(rotation) * -bulletspeed };
 	bb.b[0].boundaryInit(sp.globalPos.x + tmp.x, sp.globalPos.y + tmp.y, sp.globalPos.x + tmp.x + tmp2.x, sp.globalPos.y + tmp.y + tmp2.y, false);
 	bb.b[1].boundaryInit(sp.globalPos.x + -tmp.x, sp.globalPos.y + -tmp.y, sp.globalPos.x + -tmp.x + tmp2.x, sp.globalPos.y + -tmp.y + tmp2.y, false);
-	/*
-	if (!sp.isSprites) {
-		sp.spritesToVector();
-	}*/
 }
 
 void bullet::update()
@@ -32,6 +29,9 @@ void bullet::update()
 	Vecbool result = bb.collid();
 	if (result.iscollid) {
 		sp.setVisibla(false);
+		if(!friendly) {
+			
+		}
 	}
 }
 

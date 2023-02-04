@@ -63,6 +63,9 @@
     <ClCompile Include="effects.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sprite.h">
@@ -108,6 +111,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="effects.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,6 +22,15 @@ public:
 	float scale;
 	float hp;
 
+	int t = 15;
+	int i = 1;
+	bool sorted = false;
+	bool rightlegturn = true;
+	Vector2 predictstep = { 0,0 };
+	Vector2 tmpL = { 0,0 };
+	Vector2 tmpR = { 0,0 };
+
+
 	Vector2 localheadpos;
 	Vector2 localllpos;
 	Vector2 localrlpos;
@@ -35,8 +44,10 @@ public:
 	sprite leftleg;
 	sprite rightleg;
 
+	bodyBound bodyBound;
 	slipcollid c;
 	inventory inven;
+	boundarys bounds;
 	std::thread Thread;
 
 	player();

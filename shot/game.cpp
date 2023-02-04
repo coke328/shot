@@ -25,10 +25,10 @@ void draw() {
 	tmap->drawtilemap();
 	spc->spritesDraw();
 	uc->drawUi();
-	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + 9.5 * 4, 5, BLACK);
-	DrawCircle(spc->p->Pos.x + 5 * 4, spc->p->Pos.y + 9.5 * 4, 5, BLACK);
-	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + 13.5 * 4, 5, BLACK);
-	DrawCircle(spc->p->Pos.x + 5 * 4, spc->p->Pos.y + 13.5 * 4, 5, BLACK);
+	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + -16 * 4, 5, BLACK);
+	DrawCircle(spc->p->Pos.x + 5 * 4, spc->p->Pos.y + -16 * 4, 5, BLACK);
+	DrawCircle(spc->p->Pos.x - 5 * 4, spc->p->Pos.y + 12 * 4, 5, BLACK);
+	DrawCircle(spc->p->Pos.x + 5 * 4, spc->p->Pos.y + 12 * 4, 5, BLACK);
 }
 
 void unload() {
