@@ -63,8 +63,6 @@ bool button::mousePressed() {
 void weaponManager::init() {
 	aimPoint[0].init({ 0,0,8 * 4,8 * 4 }, 0, 0, { 3.5 * 4,4.5 * 4 }, "resource/Ui/aimPointLeft.png", 0, false);
 	aimPoint[1].init({ 0,0,8 * 4,8 * 4 }, 0, 0, { 4.5 * 4,4.5 * 4 }, "resource/Ui/aimPointRight.png", 0, false);
-	uiCtrl::push(&aimPoint[0]);
-	uiCtrl::push(&aimPoint[1]);
 	holdGun = false;
 }
 
@@ -188,8 +186,8 @@ defaultHandGun::defaultHandGun()
 	distanceToMuzzle = 96;
 	lastTimeReload = 0;
 	accuracy = 5;
-	increaseAccuracy = 1;
-	increaseOverlap = 0;
+	increaseOverlap = 1;
+	Overlap = 0;
 	decreaseOverlap = 0.1;
 	sp.init({ -100,-100 }, 32 * 4, 32 * 4, 0, 3, 0, {16 * 4, 16 * 4},"resource/guns/defaltHandgun.png",0,false);
 	sp.spritesToVector();
@@ -203,6 +201,10 @@ defaultHandGun::defaultHandGun()
 	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
 
 	leftClick.init(MOUSE_BUTTON_LEFT);
+
+	maxEffectsPool = 10;
+	
+	muzzleFlame.init({ 0,0 }, 32 * 4, 32 * 4, 7, 0, 0, { 16 * 4,16 * 4 }, "resource/effects/muzzleFlame.png", 100, maxEffectsPool);
 }
 
 defaultHandGun::~defaultHandGun()
@@ -213,9 +215,8 @@ defaultHandGun::~defaultHandGun()
 
 void defaultHandGun::fire()
 {
-	bool executeOnce = true;
 	for (int i = 1; i < maxBulletPool; i++) {
-		if (!bs[i].sp.Visible && executeOnce) {
+		if (!bs[i].sp.Visible) {
 			
 			srand(clock());
 			float rAngle = (rand() % (int)round(angle * 2 + 1)) - angle;
@@ -226,7 +227,8 @@ void defaultHandGun::fire()
 			bs[i].sp.setVisibla(true);
 			bs[i].rotation = rotation + rAngle * PI / 1800;
 			bs[i].fire();
-			executeOnce = false;
+			muzzleFlame.startEffect(firePos, rotation);
+			break;
 		}
 	}
 }
@@ -238,7 +240,7 @@ void defaultHandGun::update(Vector2 playerPos, float rot, float distanceMouse)
 	if (lastTimeFire + firerate <= t && !canFire) {
 		canFire = true;
 	}
-	angle = 10 * (accuracy + increaseAccuracy * increaseOverlap);
+	angle = 10 * (accuracy + increaseOverlap * Overlap);
 	
 	if (leftClick.mousePressed() && !reloading && canFire) {
 		canFire = false;
@@ -250,16 +252,16 @@ void defaultHandGun::update(Vector2 playerPos, float rot, float distanceMouse)
 			PlaySoundMulti(gunSound);
 			numberOfBullet--;
 			
-			increaseOverlap += increaseAccuracy;
+			Overlap += increaseOverlap;
 			
 		}
 		lastTimeFire = t;
 	}
-	if (increaseOverlap >= decreaseOverlap) {
-		increaseOverlap -= decreaseOverlap;
+	if (Overlap >= decreaseOverlap) {
+		Overlap -= decreaseOverlap;
 	}
 	else {
-		increaseOverlap = 0;
+		Overlap = 0;
 	}
 	if (numberOfBullet != maxBullet && IsKeyDown(KEY_R) && !reloading) {
 		sp.changeTexture(2);
@@ -277,6 +279,7 @@ void defaultHandGun::update(Vector2 playerPos, float rot, float distanceMouse)
 			bs[i].update();
 		}
 	}
+	muzzleFlame.updateEffects();
 }
 
 void defaultHandGun::changeToAnotherWeapon()
@@ -335,11 +338,11 @@ defaultAr::defaultAr()
 	reloading = false;
 	canFire = true;
 	distanceToGun = 60;
-	distanceToMuzzle = 96;
+	distanceToMuzzle = 115;
 	lastTimeReload = 0;
 	accuracy = 5;
-	increaseAccuracy = 1;
-	increaseOverlap = 0;
+	increaseOverlap = 1;
+	Overlap = 0;
 	decreaseOverlap = 0.1;
 	sp.init({ -100,-100 }, 32 * 4, 32 * 4, 0, 2, 0, { 16 * 4, 16 * 4 }, "resource/guns/defaultAr.png", 0, false);
 	sp.spritesToVector();
@@ -351,6 +354,10 @@ defaultAr::defaultAr()
 	}
 
 	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
+
+	maxEffectsPool = 20;
+	
+	muzzleFlame.init({ 0,0 }, 32 * 4, 32 * 4, 7, 0, 0, { 16 * 4,16 * 4 }, "resource/effects/muzzleFlame.png", 20, maxEffectsPool);
 }
 
 defaultAr::~defaultAr()
@@ -361,9 +368,9 @@ defaultAr::~defaultAr()
 
 void defaultAr::fire()
 {
-	bool executeOnce = true;
+	
 	for (int i = 1; i < maxBulletPool; i++) {
-		if (!bs[i].sp.Visible && executeOnce) {
+		if (!bs[i].sp.Visible) {
 			
 			srand(clock());
 			float rAngle = (rand() % (int)round(angle * 2 + 1)) - angle;
@@ -374,7 +381,8 @@ void defaultAr::fire()
 			bs[i].sp.setVisibla(true);
 			bs[i].rotation = rotation + rAngle * PI / 1800;
 			bs[i].fire();
-			executeOnce = false;
+			muzzleFlame.startEffect(firePos, rotation);
+			break;
 		}
 	}
 }
@@ -386,7 +394,7 @@ void defaultAr::update(Vector2 playerPos, float rot, float distanceMouse)
 	if (lastTimeFire + firerate <= t && !canFire) {
 		canFire = true;
 	}
-	angle = 10 * (accuracy + increaseAccuracy * increaseOverlap);
+	angle = 10 * (accuracy + increaseOverlap * Overlap);
 	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !reloading && canFire) {
 		canFire = false;
 		if (numberOfBullet) {
@@ -396,38 +404,35 @@ void defaultAr::update(Vector2 playerPos, float rot, float distanceMouse)
 			PlaySoundMulti(gunSound);
 			numberOfBullet--;
 
-			increaseOverlap += increaseAccuracy;
+			Overlap += increaseOverlap;
 			
 		}
 		lastTimeFire = t;
 	}
-	if (increaseOverlap >= decreaseOverlap) {
-		increaseOverlap -= decreaseOverlap;
+	if (Overlap >= decreaseOverlap) {
+		Overlap -= decreaseOverlap;
 	}
 	else {
-		increaseOverlap = 0;
+		Overlap = 0;
 	}
 	if (numberOfBullet != maxBullet && IsKeyDown(KEY_R) && !reloading) {
 		sp.changeTexture(2);
 		invokeChangeTexture(&sp, 0, reloadTime);
 		lastTimeReload = t;
 		reloading = true;
-		/*
-		for (int i = 1; i < maxBulletPool; i++) {
-			std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
-		}*/
 	}
 	Rt = lastTimeReload + reloadTime - t;
 	if (Rt <= 0 && reloading) {
 		numberOfBullet = maxBullet;
 		reloading = false;
-		increaseOverlap = 0;
+		//increaseOverlap = 0;
 	}
 	for (int i = 1; i < maxBulletPool; i++) {
 		if (bs[i].sp.Visible) {
 			bs[i].update();
 		}
 	}
+	muzzleFlame.updateEffects();
 }
 
 void defaultAr::changeToAnotherWeapon()

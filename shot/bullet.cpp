@@ -1,11 +1,5 @@
 #include "bullet.h"
-/*
-bullet::~bullet()
-{
-	sprite::sprites.erase(sprite::sprites.begin() + spId + 1);
 
-}
-*/
 void bullet::init(Vector2 gPos,int w, int h, float r, int maxId, int id, Vector2 origin, std::string file, float d, float bspeed, float damage, int radius)
 {
 	Damage = damage;

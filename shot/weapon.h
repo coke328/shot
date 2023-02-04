@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "bullet.h"
 #include "ui.h"
+#include "effects.h"
 #include <time.h>
 #include <math.h>
 #include <iostream>
@@ -38,11 +39,13 @@ public:
 	bool reloading;
 	float Rt;
 	float accuracy;
-	float increaseAccuracy;
 	float increaseOverlap;
+	float Overlap;
 	float decreaseOverlap;
 	float angle;
+	int maxEffectsPool;
 
+	effectsCtrl muzzleFlame;
 	sprite sp;
 
 	weapon();

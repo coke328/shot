@@ -15,6 +15,7 @@ sprite::sprite()
 	Origin = { 0,0 };
 	sourceRec = { 0, 0, 0, 0 };
 	Yfliped = false;
+	isSprites = false;
 }
 
 sprite::sprite(Vector2 pos, float width, float height, float rotation, int maxId, int Id, Vector2 origin, std::string file, float d, bool visible)
@@ -33,6 +34,8 @@ sprite::sprite(Vector2 pos, float width, float height, float rotation, int maxId
 	int h = texture.height;
 	sourceRec = { (float)w * textureId, 0, (float)w, (float)h };
 	Visible = visible;
+	Yfliped = false;
+	isSprites = false;
 }
 
 void sprite::init(Vector2 pos, float width, float height, float rotation, int maxId, int Id, Vector2 origin, std::string file , float d, bool visible)
@@ -51,6 +54,8 @@ void sprite::init(Vector2 pos, float width, float height, float rotation, int ma
 	int h = texture.height;
 	sourceRec = { (float)w * textureId, 0, (float)w, (float)h };
 	Visible = visible;
+	Yfliped = false;
+	isSprites = false;
 }
 
 void sprite::changeTexture(int Id) // 0~
@@ -90,7 +95,7 @@ void sprite::setRotation(float radian)
 
 void sprite::spritesToVector()
 {
-	Id = sprite::sprites.size();
+	setspId(sprite::sprites.size());
 	sprite::sprites.push_back(this);
 	setIsSprites(true);
 }
@@ -98,10 +103,12 @@ void sprite::spritesToVector()
 void sprite::spriteRemoveFromVector()
 {
 	//std::cout << "spriteR:" << Id << std::endl;
-	sprite::sprites.erase(sprite::sprites.begin() + Id);
-	setIsSprites(false);
-	for (int i = Id; i < sprite::sprites.size(); i++) {
-		sprite::sprites[i]->setspId(i);
+	if (isSprites) {
+		sprite::sprites.erase(sprite::sprites.begin() + Id);
+		setIsSprites(false);
+		for (int i = Id; i < sprite::sprites.size(); i++) {
+			sprite::sprites[i]->setspId(i);
+		}
 	}
 }
 
@@ -143,7 +150,6 @@ void sprite::drawTexture()
 
 void sprite::setglobalPos(Vector2 gPos) {
 	globalPos = gPos;
-	Pos = cam::getscreenPos(gPos);
 }
 
 void sprite::update()

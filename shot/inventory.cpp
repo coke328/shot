@@ -31,11 +31,8 @@ inventory::inventory()
 
 	reloadBar[0].init({ 0,-25 * 4,32 * 4,32 * 4 }, 0, 0, { 16 * 4,16.5 * 4 }, "resource/Ui/reloadingBar1.png", 0, false);
 	reloadBar[1].init({ 0,-25 * 4,8 * 4,8 * 4 }, 0, 0, { 4.5 * 4,4.5 * 4 }, "resource/Ui/reloadingBar2.png", 1, false);
-	uiCtrl::push(&reloadBar[0]);
-	uiCtrl::push(&reloadBar[1]);
 
 	inventoryUi.init({ 0,0,400 * 4,225 * 4 }, 0, 0, { 200*4,125*4 }, "resource/Ui/inventory.png", 2, false);
-	uiCtrl::push(&inventoryUi);
 	wm.init();
 
 	tab.init(KEY_TAB);

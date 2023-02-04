@@ -58,6 +58,8 @@ void ui::init(Rectangle dRec, int maxId, int id, Vector2 origin, std::string fil
 	sourceRec.y = 0;
 	sourceRec.width = w;
 	sourceRec.height = h;
+
+	uiCtrl::push(this);
 }
 
 void ui::setVisible(bool v)
