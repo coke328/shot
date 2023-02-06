@@ -1,11 +1,5 @@
 #include "effects.h"
 
-void start(int cnt, float time, effects* e) {
-	
-	e->sp.setVisibla(false);
-	e->setState(false);
-}
-
 effects::~effects()
 {
 	sp.unloadTexture();
@@ -47,7 +41,6 @@ void effects::updateEffect()
 	
 	if (lastTime + time <= clock()) {
 		state++;
-		std::cout << state << std::endl;
 		if (state >= sp.maxTextureId + 1) {
 			setState(false);
 			sp.setVisibla(false);

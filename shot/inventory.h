@@ -23,6 +23,7 @@ private:
 
 	ui reloadBar[2];
 	ui inventoryUi;
+	ui numberOfBullet[7];
 
 	button tab;
 
@@ -33,6 +34,7 @@ public:
 	void getitem(int itemIdx);
 	void changeItem(int slot1, int slot2);
 	void drawInventory();
+	void changeBulletCnt();
 	void update(Vector2 gPos, float rot, float distanceMouse);
 };
 

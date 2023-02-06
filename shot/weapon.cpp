@@ -89,6 +89,16 @@ bool weaponManager::getisReloading()
 	return w->reloading;
 }
 
+int weaponManager::getMaxBullet()
+{
+	return w->maxBullet;
+}
+
+int weaponManager::getBulletCnt()
+{
+	return w->numberOfBullet;
+}
+
 void weaponManager::fire()
 {
 	w->fire();
@@ -191,12 +201,9 @@ defaultHandGun::defaultHandGun()
 	decreaseOverlap = 0.1;
 	sp.init({ -100,-100 }, 32 * 4, 32 * 4, 0, 3, 0, {16 * 4, 16 * 4},"resource/guns/defaltHandgun.png",0,false);
 	sp.spritesToVector();
-	bs = new bullet[maxBulletPool];
-	bs[0].init({0,0}, 32 * 4, 32 * 4, 0, 0, 0, {16 * 4,16 * 4}, "resource/bullets/bullet.png", 0, bspeed, damage, 2*4);
-	for (int i = 1; i < maxBulletPool; i++) {
-		bs[i].sp.setVisibla(false);
-		bs[i].sp.setspId(-1);
-	}
+
+	maxBulletPool = 20;
+	bc.init({0,0}, 32 * 4, 32 * 4, 0, 0, 0, {16 * 4,16 * 4}, "resource/bullets/bullet.png", 0, bspeed, damage, 2*4,maxBulletPool);
 
 	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
 
@@ -204,33 +211,18 @@ defaultHandGun::defaultHandGun()
 
 	maxEffectsPool = 10;
 	
-	muzzleFlame.init({ 0,0 }, 32 * 4, 32 * 4, 7, 0, 0, { 16 * 4,16 * 4 }, "resource/effects/muzzleFlame.png", 100, maxEffectsPool);
+	muzzleFlame.init({ 0,0 }, 32 * 4, 32 * 4, 7, 0, 0, { 16 * 4,16 * 4 }, "resource/effects/muzzleFlame.png", 20, maxEffectsPool);
 }
 
 defaultHandGun::~defaultHandGun()
 {
 	UnloadSound(gunSound);
-	delete[] bs;
 }
 
 void defaultHandGun::fire()
 {
-	for (int i = 1; i < maxBulletPool; i++) {
-		if (!bs[i].sp.Visible) {
-			
-			srand(clock());
-			float rAngle = (rand() % (int)round(angle * 2 + 1)) - angle;
-			int id = bs[i].sp.Id;
-			bs[i] = bs[0];
-			bs[i].sp.setspId(id);
-			bs[i].sp.setglobalPos(firePos);
-			bs[i].sp.setVisibla(true);
-			bs[i].rotation = rotation + rAngle * PI / 1800;
-			bs[i].fire();
-			muzzleFlame.startEffect(firePos, rotation);
-			break;
-		}
-	}
+	bc.fireBullet(firePos, rotation, angle);
+	muzzleFlame.startEffect(firePos, rotation);
 }
 
 void defaultHandGun::update(Vector2 playerPos, float rot, float distanceMouse)
@@ -274,35 +266,18 @@ void defaultHandGun::update(Vector2 playerPos, float rot, float distanceMouse)
 		numberOfBullet = maxBullet;
 		reloading = false;
 	}
-	for (int i = 1; i < maxBulletPool; i++) {
-		if (bs[i].sp.Visible) {
-			bs[i].update();
-		}
-	}
-	muzzleFlame.updateEffects();
+	//bc.updateBullet();
+	//muzzleFlame.updateEffects();
 }
 
 void defaultHandGun::changeToAnotherWeapon()
 {
-	//std::cout << "before:" << sprite::sprites.size() << std::endl;
-	for (int i = 1; i < maxBulletPool; i++) {
-		//std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
-		
-		//std::cout << i << std::endl;
-		bs[i].destructor();
-		
-	}
-	//std::cout << "after:" << sprite::sprites.size() << std::endl;
+	bc.destructor();
 }
 
 void defaultHandGun::changeThisWeapon() 
 {
-	for (int i = 1; i < maxBulletPool; i++) {
-		bs[i].sp.setVisibla(false);
-		bs[i].sp.setspId(-1);
-		bs[i].sp.setIsSprites(true);
-		bs[i].sp.spritesToVector();
-	}
+	bc.holdThis();
 	lastTimeReload = clock();
 }
 
@@ -346,12 +321,9 @@ defaultAr::defaultAr()
 	decreaseOverlap = 0.1;
 	sp.init({ -100,-100 }, 32 * 4, 32 * 4, 0, 2, 0, { 16 * 4, 16 * 4 }, "resource/guns/defaultAr.png", 0, false);
 	sp.spritesToVector();
-	bs = new bullet[maxBulletPool];
-	bs[0].init({ 0,0 }, 32 * 3, 32 * 3, 0, 0, 0, { 16 * 3,16 * 3 }, "resource/bullets/bullet.png", 0, bspeed, damage, 2 * 4);
-	for (int i = 1; i < maxBulletPool; i++) {
-		bs[i].sp.setVisibla(false);
-		bs[i].sp.setspId(-1);
-	}
+
+	maxBulletPool = 50;
+	bc.init({ 0,0 }, 32 * 3, 32 * 3, 0, 0, 0, { 16 * 3,16 * 3 }, "resource/bullets/bullet.png", 0, bspeed, damage, 2 * 4, maxBulletPool);
 
 	gunSound = LoadSound("resource/sounds/handgunSound.mp3");
 
@@ -363,28 +335,12 @@ defaultAr::defaultAr()
 defaultAr::~defaultAr()
 {
 	UnloadSound(gunSound);
-	delete[] bs;
 }
 
 void defaultAr::fire()
 {
-	
-	for (int i = 1; i < maxBulletPool; i++) {
-		if (!bs[i].sp.Visible) {
-			
-			srand(clock());
-			float rAngle = (rand() % (int)round(angle * 2 + 1)) - angle;
-			int id = bs[i].sp.Id;
-			bs[i] = bs[0];
-			bs[i].sp.setspId(id);
-			bs[i].sp.setglobalPos(firePos);
-			bs[i].sp.setVisibla(true);
-			bs[i].rotation = rotation + rAngle * PI / 1800;
-			bs[i].fire();
-			muzzleFlame.startEffect(firePos, rotation);
-			break;
-		}
-	}
+	bc.fireBullet(firePos, rotation, angle);
+	muzzleFlame.startEffect(firePos, rotation);
 }
 
 void defaultAr::update(Vector2 playerPos, float rot, float distanceMouse)
@@ -425,35 +381,18 @@ void defaultAr::update(Vector2 playerPos, float rot, float distanceMouse)
 	if (Rt <= 0 && reloading) {
 		numberOfBullet = maxBullet;
 		reloading = false;
-		//increaseOverlap = 0;
 	}
-	for (int i = 1; i < maxBulletPool; i++) {
-		if (bs[i].sp.Visible) {
-			bs[i].update();
-		}
-	}
-	muzzleFlame.updateEffects();
+	//bc.updateBullet();
+	//muzzleFlame.updateEffects();
 }
 
 void defaultAr::changeToAnotherWeapon()
 {
-	//std::cout << "before:" << sprite::sprites.size() << std::endl;
-	for (int i = 1; i < maxBulletPool; i++) {
-		//std::cout << "staw:" << bs[i].sp.isSprites << std::endl;
-
-		//std::cout << i << std::endl;
-		bs[i].destructor();
-	}
-	//std::cout << "after:" << sprite::sprites.size() << std::endl;
+	bc.destructor();
 }
 
 void defaultAr::changeThisWeapon() 
 {
-	for (int i = 1; i < maxBulletPool; i++) {
-		bs[i].sp.setVisibla(false);
-		bs[i].sp.setspId(-1);
-		bs[i].sp.setIsSprites(true);
-		bs[i].sp.spritesToVector();
-	}
+	bc.holdThis();
 	lastTimeReload = clock();
 }

@@ -15,10 +15,8 @@ void insertion_sort(int* seq,int n) {
 void spriteCtrl::load() {
 	p = new player();
 	p->playerInit(200, 0);
-	sprite::sprites.push_back(&p->head);
-	sprite::sprites.push_back(&p->body);
-	sprite::sprites.push_back(&p->leftleg);
-	sprite::sprites.push_back(&p->rightleg);
+	
+	e = new enemy();
 
 	int n = sprite::sprites.size();
 	sequence = new int[n];
@@ -63,8 +61,11 @@ void spriteCtrl::spritesUnload()
 
 void spriteCtrl::spritesUpdate()
 {
-	
 	for (int i = 0; i < sprite::sprites.size(); i++) {
 		sprite::sprites[i]->update();
 	}
+	p->update();
+	p->partsMovement();
+	e->update();
+	e->partsMovement();
 }

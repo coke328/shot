@@ -24,3 +24,14 @@ public:
 	void destructor();
 };
 
+class bulletCtrl {
+public:
+	bullet* bulletPool;
+	int maxPool;
+
+	void destructor();
+	void init(Vector2 gPos, int w, int h, float r, int maxId, int id, Vector2 origin, std::string file, float d, float bSpeed, float damage, int radius, int mPool);
+	void fireBullet(Vector2 firePos, float rotation, float angle);
+	void updateBullet();
+	void holdThis();
+};

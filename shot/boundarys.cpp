@@ -1,6 +1,7 @@
 #include "boundarys.h"
 
 std::vector<boundary> boundarys::staticbounds;
+std::vector<bodyBound*> boundarys::bodyBoundarys;
 int boundarys::dyboundcnt;
 int boundarys::holeidxstart;
 
@@ -30,8 +31,9 @@ void boundarys::init(int cnt, int idx) {
 void boundarys::setboundaryPos(Vector2 gPos)
 {
 	globalPos = gPos;
+	boundcnt = blocalPos.size();
 	for (int i = 0; i < boundcnt - 1; i++) {
-		bounds[i].boundaryInit(globalPos.x + blocalPos[i].x, globalPos.y + blocalPos[i].y, globalPos.x + blocalPos[i + 1].x, globalPos.y + blocalPos[i + 1].y, 0);
+		bounds.at(i).boundaryInit(globalPos.x + blocalPos[i].x, globalPos.y + blocalPos[i].y, globalPos.x + blocalPos[i + 1].x, globalPos.y + blocalPos[i + 1].y, 0);
 	}
 	bounds[boundcnt - 1].boundaryInit(globalPos.x + blocalPos[boundcnt - 1].x, globalPos.y + blocalPos[boundcnt - 1].y, globalPos.x + blocalPos[0].x, globalPos.y + blocalPos[0].y, 0);
 }
@@ -64,13 +66,23 @@ void boundarys::suburbbound(int w, int h, float scale)
 	boundarys::staticbounds.emplace_back(w * 32 * scale, h * 16 * scale, w * 64 * scale, 0, true);
 }
 
+void boundarys::pushBounds(Vector2 p1, Vector2 p2)
+{
+	bounds.emplace_back(p1.x, p1.y, p2.x, p2.y, false);
+}
+
+void boundarys::pushlocalBoundPos(float x, float y)
+{
+	blocalPos.emplace_back(x,y);
+}
+
 vec2::vec2(float inx, float iny)
 {
 	x = inx;
 	y = iny;
 }
 
-bool slipcollid::collid(Vector2& globalPos, Vector2& vel)
+bool slipcollid::update(Vector2& globalPos, Vector2& vel)
 {
 	setboundaryPos(globalPos);
 	
@@ -121,11 +133,17 @@ bool slipcollid::collid(Vector2& globalPos, Vector2& vel)
 	return false;
 }
 
+void bulletBound::setDamage(float d)
+{
+	damage = d;
+}
+
 Vecbool bulletBound::collid()
 {
 	Vecbool result;
 	result.iscollid = false;
 	result.point = { 0,0 };
+	
 
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < boundarys::holeidxstart; j++) {
@@ -135,7 +153,47 @@ Vecbool bulletBound::collid()
 				result.point = tmp.point;
 			}
 		}
+		for (int j = 0; j < boundarys::bodyBoundarys.size(); j++) {
+			bool hitEnemy = false;
+			for (int a = 0; a < 4; a++) {
+				if (isboundmeet(b[i], boundarys::bodyBoundarys[j]->bounds[a]).iscollid) {
+					hitEnemy = true;
+				}
+			}
+
+			if (hitEnemy) {
+				boundarys::bodyBoundarys[j]->getDamage(damage);
+				result.iscollid = true;
+			}
+		}
 	}
 
 	return result;
+}
+
+bodyBound::~bodyBound()
+{
+	
+}
+
+void bodyBound::linkHp(float* hp)
+{
+	Hp = hp;
+}
+
+bool bodyBound::update(Vector2& globalPos, Vector2& Vel)
+{
+	setboundaryPos(globalPos);
+	return false;
+}
+
+void bodyBound::pushBodyBounds()
+{
+	bodyBoundarys.push_back(this);
+}
+
+void bodyBound::getDamage(float d)
+{
+	*Hp -= d;
+	std::cout << *Hp << "\n";
 }

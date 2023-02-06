@@ -43,9 +43,12 @@ public:
 	float Overlap;
 	float decreaseOverlap;
 	float angle;
+	int numberOfBullet;
+	int maxBullet;
 	int maxEffectsPool;
 
 	effectsCtrl muzzleFlame;
+	bulletCtrl bc;
 	sprite sp;
 
 	weapon();
@@ -67,6 +70,8 @@ public:
 	int getReloadingTime();
 	float getRt();
 	bool getisReloading();
+	int getMaxBullet();
+	int getBulletCnt();
 	void fire();
 	void changeToAnotherWeapon();
 	void changeThisWeapon();
@@ -91,14 +96,11 @@ public:
 	clock_t lastTimeFire;
 	clock_t lastTimeReload;
 	bool canFire;
-	int numberOfBullet;
-	int maxBullet;
-	const int maxBulletPool = 50;
+	int maxBulletPool;
 	float bspeed;
 	bool singleFire;
 	bool lastPressed;
 
-	bullet* bs;
 	Sound gunSound;
 	button leftClick;
 
@@ -115,14 +117,9 @@ public:
 	clock_t lastTimeFire;
 	clock_t lastTimeReload;
 	bool canFire;
-	int numberOfBullet;
-	int maxBullet;
-	const int maxBulletPool = 50;
+	int maxBulletPool;
 	float bspeed;
 
-
-
-	bullet* bs;
 	Sound gunSound;
 
 	defaultAr();

@@ -138,6 +138,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="effects.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inventory.cpp" />
     <ClCompile Include="main.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="cam.h" />
     <ClInclude Include="effects.h" />
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="pillar.h" />

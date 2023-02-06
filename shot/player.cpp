@@ -22,6 +22,7 @@ void player::playerInit(int x, int y)
 	scale = 4;
 	localheadpos = { 0,-12 * scale };
 	globalPos = { (float)x,(float)y };
+	hp = 100;
 	
 	//parts pos set
 	rightfootstep = { 400 - 2*scale,300 + 14 * scale};
@@ -33,44 +34,36 @@ void player::playerInit(int x, int y)
 	body.init({ Pos.x,Pos.y }, 32 * scale, 32 * scale, 0, 1, 0, { (float)16.5 * scale ,18 * scale }, "resource/body.png",0,true);
 	leftleg.init({ Pos.x + 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)18.5 * scale, 23 * scale }, "resource/rightleg.png",0,true);
 	rightleg.init({ Pos.x - 2 * scale ,Pos.y + 5 * scale }, 32 * scale, 32 * scale, 0, 1, 0, { (float)14.5 * scale, 23 * scale }, "resource/leftleg.png",0,true);
+	head.spritesToVector();
+	body.spritesToVector();
+	leftleg.spritesToVector();
+	rightleg.spritesToVector();
 
 	//boundary set
-	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, false);
-	c.bounds.emplace_back(globalPos.x + 5 * scale, globalPos.y + 9.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, globalPos.x + 5 * scale, globalPos.y + 13.5 * scale, false);
-	c.bounds.emplace_back(globalPos.x - 5 * scale, globalPos.y + 9.5 * scale, globalPos.x - 5 * scale, globalPos.y + 13.5 * scale, false);
-	c.blocalPos.emplace_back(-5 * scale, 9.5 * scale);
-	c.blocalPos.emplace_back(5 * scale, 9.5 * scale);
-	c.blocalPos.emplace_back(5 * scale, 13.5 * scale);
-	c.blocalPos.emplace_back(-5 * scale, 13.5 * scale);
+	c.pushBounds({ (float)(globalPos.x - 5 * scale), (float)(globalPos.y + 9.5 * scale) }, { (float)(globalPos.x + 5 * scale), (float)(globalPos.y + 9.5 * scale) });
+	c.pushBounds({ (float)(globalPos.x + 5 * scale), (float)(globalPos.y + 9.5 * scale) }, { (float)(globalPos.x + 5 * scale), (float)(globalPos.y + 13.5 * scale) });
+	c.pushBounds({ (float)(globalPos.x - 5 * scale), (float)(globalPos.y + 13.5 * scale) }, { (float)(globalPos.x + 5 * scale), (float)(globalPos.y + 13.5 * scale) });
+	c.pushBounds({ (float)(globalPos.x - 5 * scale), (float)(globalPos.y + 9.5 * scale) }, { (float)(globalPos.x - 5 * scale), (float)(globalPos.y + 13.5 * scale) });
+	c.pushlocalBoundPos(-5 * scale, 9.5 * scale);
+	c.pushlocalBoundPos(5 * scale, 9.5 * scale);
+	c.pushlocalBoundPos(5 * scale, 13.5 * scale);
+	c.pushlocalBoundPos(-5 * scale, 13.5 * scale);
 	c.init(4,0);//(boundcnt,id)
 	boundarys::dyboundcnt += 4;
 	
-}
+	BodyBound.pushBounds({ globalPos.x - 5 * scale, globalPos.y + -16 * scale }, { globalPos.x + 5 * scale, globalPos.y + -16 * scale });
+	BodyBound.pushBounds({ globalPos.x + 5 * scale, globalPos.y + -16 * scale }, { globalPos.x + 5 * scale, globalPos.y + 12 * scale });
+	BodyBound.pushBounds({ globalPos.x - 5 * scale, globalPos.y + 12 * scale }, { globalPos.x + 5 * scale, globalPos.y + 12 * scale });
+	BodyBound.pushBounds({ globalPos.x - 5 * scale, globalPos.y + -16 * scale }, { globalPos.x - 5 * scale, globalPos.y + 12 * scale });
 
-void player::drawParts()
-{
+	BodyBound.pushlocalBoundPos(-5 * scale, -16 * scale);
+	BodyBound.pushlocalBoundPos(5 * scale, -16 * scale);
+	BodyBound.pushlocalBoundPos(5 * scale, 12 * scale);
+	BodyBound.pushlocalBoundPos(-5 * scale, 12 * scale);
 	
-	head.drawTexture();
-	
-	if (localrlpos.y - 5 * scale < 0) {
-		rightleg.drawTexture();
-		leftleg.drawTexture();
-	}
-	else {
-		leftleg.drawTexture();
-		rightleg.drawTexture();
-	}
-	body.drawTexture();
-	
+	BodyBound.linkHp(&hp);
+	BodyBound.pushBodyBounds();
 }
-int t = 15;
-int i = 1;
-bool sorted = false;
-bool rightlegturn = true;
-Vector2 predictstep = { 0,0 };
-Vector2 tmpL = { 0,0 };
-Vector2 tmpR = { 0,0 };
 
 void player::partsMovement()
 {
@@ -215,7 +208,7 @@ void player::update()
 	}
 	else { state = 1; }
 
-	c.collid(globalPos, Vel);
+	c.update(globalPos, Vel);
 
 
 	globalPos.x += Vel.x;

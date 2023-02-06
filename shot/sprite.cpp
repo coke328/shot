@@ -95,9 +95,11 @@ void sprite::setRotation(float radian)
 
 void sprite::spritesToVector()
 {
+
 	setspId(sprite::sprites.size());
 	sprite::sprites.push_back(this);
 	setIsSprites(true);
+	
 }
 
 void sprite::spriteRemoveFromVector()

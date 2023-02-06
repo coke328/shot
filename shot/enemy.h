@@ -1,26 +1,25 @@
 #pragma once
-#include "sprite.h"
 #include "boundarys.h"
-#include "inventory.h"
-#include <thread>
+#include "sprite.h"
+#include "cam.h"
+#include <time.h>
 
-class player
+class enemy
 {
-public:
-	Vector2 Pos;
-	Vector2 Vel;
-	Vector2 Acc;
-	Vector2 globalPos;
-
-	int state = 0;//0:stop 1:walk
-	float Xspeed;
-	float Yspeed;
-	float Xmaxspeed;
-	float Ymaxspeed;
-	float stopspeed;
-	float rotation;
-	float scale;
+private:
 	float hp;
+	float lastHp;
+	float rotation;
+	Vector2 globalPos;
+	Vector2 Vel;
+	Vector2 Pos;
+
+	float lastTimeHit;
+	float overlapDamage;
+
+	bodyBound BodyBound;
+
+	int state;
 
 	int t = 15;
 	int i = 1;
@@ -37,22 +36,18 @@ public:
 	Vector2 rightfootstep;
 	Vector2 lastfootposR;
 	Vector2 lastfootposL;
-	
+
 	sprite head;
 	sprite body;
 	sprite leftleg;
 	sprite rightleg;
 
-	bodyBound BodyBound;
-	slipcollid c;
-	inventory inven;
-	std::thread Thread;
-
-	player();
-	void playerInit(int x, int y);
-	void partsMovement();
+public:
+	enemy();
+	~enemy();
 	void update();
-	void unloadTextures();
+	void partsMovement();
 	void legmove();
+	void getDamage(float d);
 };
 

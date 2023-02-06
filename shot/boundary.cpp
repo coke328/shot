@@ -117,8 +117,7 @@ void boundary::boundaryInit(float x1, float y1, float x2, float y2, bool st)
 
 void boundary::removeMemory()
 {
-    delete[] bsaves;
-    delete[] ps;
+    
 }
 
 void boundary::movePos(Vector2 mPos)

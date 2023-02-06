@@ -1,8 +1,6 @@
 #include "inventory.h"
 
 void ReloadBarmove(int reloadTime, float Rt, bool isReloading, ui* reloadBar) {
-	//std::cout << Rt << std::endl;
-	//std::cout << reloadTime << std::endl;
 	if (Rt > 0 && isReloading) {
 		reloadBar[0].setVisible(true);
 		reloadBar[1].setVisible(true);
@@ -33,6 +31,15 @@ inventory::inventory()
 	reloadBar[1].init({ 0,-25 * 4,8 * 4,8 * 4 }, 0, 0, { 4.5 * 4,4.5 * 4 }, "resource/Ui/reloadingBar2.png", 1, false);
 
 	inventoryUi.init({ 0,0,400 * 4,225 * 4 }, 0, 0, { 200*4,125*4 }, "resource/Ui/inventory.png", 2, false);
+
+	numberOfBullet[0].init({ 102 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+	numberOfBullet[1].init({ 114 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+	numberOfBullet[2].init({ 126 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+	numberOfBullet[3].init({ 138 * 4,88 * 4,16 * 4,16 * 4 }, 2, 0, { 0,0 }, "resource/Ui/symbol.png", 1, true);
+	numberOfBullet[4].init({ 150 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+	numberOfBullet[5].init({ 162 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+	numberOfBullet[6].init({ 174 * 4,88 * 4,16 * 4,16 * 4 }, 10, 0, { 0,0 }, "resource/Ui/number.png", 1, true);
+
 	wm.init();
 
 	tab.init(KEY_TAB);
@@ -66,6 +73,27 @@ void inventory::drawInventory()
 	if (activeInven) {
 		
 	}
+}
+
+void inventory::changeBulletCnt()
+{
+	int mb = wm.getMaxBullet();
+	int bc = wm.getBulletCnt();
+	int place[3];
+	for (int i = 2; i >= 0; i--) {
+		place[i] = bc / (int)powf(10, i);
+		bc -= place[i] * (int)powf(10, i);
+	}
+	numberOfBullet[0].setTextureId(place[2]);
+	numberOfBullet[1].setTextureId(place[1]);
+	numberOfBullet[2].setTextureId(place[0]);
+	for (int i = 2; i >= 0; i--) {
+		place[i] = mb / (int)powf(10, i);
+		mb -= place[i] * (int)powf(10, i);
+	}
+	numberOfBullet[4].setTextureId(place[2]);
+	numberOfBullet[5].setTextureId(place[1]);
+	numberOfBullet[6].setTextureId(place[0]);
 }
 
 void inventory::update(Vector2 gPos, float rot, float distanceMouse)
@@ -130,4 +158,10 @@ void inventory::update(Vector2 gPos, float rot, float distanceMouse)
 
 		ReloadBarmove(wm.getReloadingTime(), wm.getRt(), wm.getisReloading(), reloadBar);
 	}
+	for (int i = 0; i < 3; i++) {
+		Weapon[i]->muzzleFlame.updateEffects();
+		Weapon[i]->bc.updateBullet();
+	}
+	
+	changeBulletCnt();
 }
